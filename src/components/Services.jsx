@@ -121,7 +121,7 @@ const Services = () => {
                                         }
                                     `}
                                     >
-                                        {service.description}
+                                        {services.description}
                                     </div>
                                 </div>
                             </div>
