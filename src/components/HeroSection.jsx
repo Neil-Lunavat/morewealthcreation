@@ -1,4 +1,14 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+
 const HeroSection = () => {
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        // Set loaded state after component mounts for animations
+        setIsLoaded(true);
+    }, []);
+
     const scrollToSection = (sectionId) => {
         const element = document.getElementById(sectionId);
 
@@ -19,32 +29,279 @@ const HeroSection = () => {
         }
     };
 
+    // Animation variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.1,
+            },
+        },
+    };
+
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: { duration: 0.6, ease: "easeOut" },
+        },
+    };
+
+    const buttonVariants = {
+        initial: { scale: 1 },
+        hover: {
+            scale: 1.05,
+            transition: { duration: 0.2, ease: "easeInOut" },
+        },
+        tap: { scale: 0.98 },
+    };
+
+    const gradientVariants = {
+        initial: {
+            backgroundPosition: "0% 50%",
+        },
+        animate: {
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+            transition: {
+                duration: 15,
+                ease: "linear",
+                repeat: Infinity,
+            },
+        },
+    };
+
+    const decorativeCircle = (size, position, delay) => ({
+        hidden: { scale: 0, opacity: 0 },
+        visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+                delay,
+                duration: 0.8,
+                ease: "easeOut",
+            },
+        },
+    });
+
     return (
-        <div className="flex flex-col items-center mt-6 lg:mt-20">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-center tracking-wide">
-                Hi, I'm Aayush More.
-                <br />
-                Your personal
-                <span className="bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text">
-                    {" "}
-                    Finance Tutor
-                </span>
-            </h1>
-            <p className="mt-10 text-lg text-center text-neutral-500 max-w-4xl">
-                Personalized financial coaching and investment strategies
-                tailored for your success. Take control of your finances today.
-            </p>
-            <div className="flex justify-center my-10">
-                <button
-                    onClick={() => scrollToSection("bookingform")}
-                    className="relative py-3 px-4 mx-3 rounded-md text-white border-4 border-transparent duration-300 group hover:scale-105"
-                >
-                    <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 rounded-md opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
-                    <span className="absolute inset-0 border-2 border-transparent rounded-md group-hover:border-orange-500 group-hover:border-gradient-to-r group-hover:from-orange-500 group-hover:to-orange-800 transition-all duration-300"></span>
-                    <span className="relative z-10">Book a free call</span>
-                </button>
+        <motion.div
+            className="relative pt-10 pb-20 lg:pt-20 lg:pb-32 px-6 overflow-hidden"
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+            variants={containerVariants}
+        >
+            {/* Decorative elements */}
+            <motion.div
+                className="absolute top-24 -left-32 w-64 h-64 rounded-full bg-gradient-to-br from-orange-500/10 to-red-800/5 blur-3xl"
+                variants={decorativeCircle(64, "-left-32", 0.3)}
+            />
+            <motion.div
+                className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-gradient-to-tr from-orange-600/10 to-red-700/5 blur-3xl"
+                variants={decorativeCircle(48, "-right-12", 0.5)}
+            />
+
+            <div className="max-w-7xl mx-auto">
+                <div className="flex flex-col lg:flex-row items-center justify-between">
+                    {/* Left content column */}
+                    <motion.div
+                        className="w-full lg:w-7/12 lg:pr-12 mb-12 lg:mb-0"
+                        variants={itemVariants}
+                    >
+                        <motion.h1
+                            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight"
+                            variants={itemVariants}
+                        >
+                            Hi, I'm Aayush More.
+                            <br />
+                            Your personal
+                            <motion.span
+                                className="bg-gradient-to-r from-orange-500 via-orange-600 to-red-800 bg-clip-text text-transparent inline-block"
+                                initial="initial"
+                                animate="animate"
+                                variants={gradientVariants}
+                                style={{
+                                    backgroundSize: "200% 100%",
+                                }}
+                            >
+                                {" Finance Tutor"}
+                            </motion.span>
+                        </motion.h1>
+
+                        <motion.p
+                            className="mt-6 text-xl text-neutral-400 max-w-2xl"
+                            variants={itemVariants}
+                        >
+                            Personalized financial coaching and investment
+                            strategies crafted to help you take control of your
+                            financial future.
+                        </motion.p>
+
+                        <motion.div
+                            className="mt-10 flex flex-wrap gap-4"
+                            variants={itemVariants}
+                        >
+                            <motion.button
+                                onClick={() => scrollToSection("bookingform")}
+                                className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
+                            >
+                                <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
+                                <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
+                                <span className="relative z-10">
+                                    Book a Free Call
+                                </span>
+                            </motion.button>
+
+                            <motion.button
+                                onClick={() => scrollToSection("services")}
+                                className="relative group px-8 py-4 rounded-lg text-white font-medium text-lg overflow-hidden bg-transparent border border-neutral-700 hover:border-orange-500 transition-colors duration-300"
+                                variants={buttonVariants}
+                                whileHover="hover"
+                                whileTap="tap"
+                            >
+                                <span className="relative z-10">
+                                    Explore services
+                                </span>
+                            </motion.button>
+                        </motion.div>
+
+                        <motion.div
+                            className="mt-10 flex items-center gap-3"
+                            variants={itemVariants}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.8, duration: 0.5 }}
+                        >
+                            <div className="flex -space-x-2">
+                                {[1, 2, 3].map((i) => (
+                                    <div
+                                        key={i}
+                                        className="w-8 h-8 rounded-full bg-neutral-700 border-2 border-neutral-900 flex items-center justify-center text-xs font-medium"
+                                    >
+                                        {i}
+                                    </div>
+                                ))}
+                            </div>
+                            <span className="text-sm text-neutral-400">
+                                Join{" "}
+                                <span className="text-orange-500 font-medium">
+                                    500+
+                                </span>{" "}
+                                students already mastering their finances
+                            </span>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Right decorative element */}
+                    <motion.div
+                        className="w-full lg:w-5/12 h-full relative"
+                        variants={itemVariants}
+                    >
+                        <motion.div
+                            className="relative z-10 w-full aspect-square max-w-md mx-auto"
+                            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            transition={{
+                                delay: 0.3,
+                                duration: 0.8,
+                                type: "spring",
+                                stiffness: 100,
+                            }}
+                        >
+                            <div className="w-full h-full rounded-2xl bg-gradient-to-br from-neutral-800 to-neutral-900 p-1">
+                                <div className="w-full h-full rounded-xl bg-neutral-900 p-6 flex flex-col">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <div className="flex space-x-1">
+                                            {[1, 2, 3].map((i) => (
+                                                <div
+                                                    key={i}
+                                                    className="w-3 h-3 rounded-full bg-neutral-700"
+                                                />
+                                            ))}
+                                        </div>
+                                        <div className="text-xs text-neutral-500">
+                                            Financial Growth
+                                        </div>
+                                    </div>
+
+                                    <div className="flex-1 flex items-center justify-center">
+                                        <div className="space-y-6 w-full">
+                                            <motion.div
+                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
+                                                initial={{ width: "0%" }}
+                                                animate={{ width: "85%" }}
+                                                transition={{
+                                                    delay: 0.8,
+                                                    duration: 1,
+                                                    ease: "easeOut",
+                                                }}
+                                            />
+                                            <motion.div
+                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
+                                                initial={{ width: "0%" }}
+                                                animate={{ width: "65%" }}
+                                                transition={{
+                                                    delay: 1.0,
+                                                    duration: 0.8,
+                                                    ease: "easeOut",
+                                                }}
+                                            />
+                                            <motion.div
+                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
+                                                initial={{ width: "0%" }}
+                                                animate={{ width: "95%" }}
+                                                transition={{
+                                                    delay: 1.2,
+                                                    duration: 1.2,
+                                                    ease: "easeOut",
+                                                }}
+                                            />
+                                            <motion.div
+                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
+                                                initial={{ width: "0%" }}
+                                                animate={{ width: "72%" }}
+                                                transition={{
+                                                    delay: 1.4,
+                                                    duration: 1,
+                                                    ease: "easeOut",
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 text-center">
+                                        <div className="text-sm text-neutral-400">
+                                            Your financial future
+                                        </div>
+                                        <motion.div
+                                            className="font-medium text-orange-500"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{
+                                                delay: 1.6,
+                                                duration: 0.5,
+                                            }}
+                                        >
+                                            Potential growth →
+                                        </motion.div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Background shape */}
+                        <motion.div
+                            className="absolute inset-0 -z-10 translate-x-6 translate-y-6 scale-90 rounded-2xl bg-gradient-to-r from-orange-500/20 to-red-800/20 blur-sm"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5, duration: 1 }}
+                        />
+                    </motion.div>
+                </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
