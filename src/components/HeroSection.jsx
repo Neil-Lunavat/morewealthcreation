@@ -144,20 +144,15 @@ const HeroSection = () => {
                             variants={itemVariants}
                         >
                             <motion.button
-                                onClick={() => scrollToSection("bookingform")}
-                                className="relative group px-8 py-4 rounded-lg text-white font-medium text-lg overflow-hidden"
-                                variants={buttonVariants}
-                                whileHover="hover"
-                                whileTap="tap"
+                                onClick={() =>
+                                    document.getElementById("bookingform")
+                                }
+                                className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
                             >
-                                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-orange-500 to-red-800 transition-all duration-300 group-hover:opacity-90"></span>
-                                <span
-                                    className="absolute inset-0 w-full h-full bg-gradient-to-r from-orange-500 to-red-800 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                                    style={{ filter: "brightness(1.1)" }}
-                                ></span>
-                                <span className="absolute -inset-x-2 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:translate-y-1"></span>
+                                <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
+                                <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
                                 <span className="relative z-10">
-                                    Book a free call
+                                    Book a Free Call
                                 </span>
                             </motion.button>
 
