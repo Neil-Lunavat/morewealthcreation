@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { services } from "../constants";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
+import { services } from "../constants";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const Services = () => {
     const [activeCard, setActiveCard] = useState(null);
     const [expandedServices, setExpandedServices] = useState({});
     const [isMobile, setIsMobile] = useState(false);
-    const [isInView, setIsInView] = useState(false);
+    const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
 
     // Check screen size for responsive behavior
     useEffect(() => {
@@ -21,15 +21,9 @@ const Services = () => {
         // Add event listener
         window.addEventListener("resize", checkScreenSize);
 
-        // Set isInView to true after component mounts
-        const timer = setTimeout(() => {
-            setIsInView(true);
-        }, 100);
-
         // Clean up
         return () => {
             window.removeEventListener("resize", checkScreenSize);
-            clearTimeout(timer);
         };
     }, []);
 
@@ -104,8 +98,9 @@ const Services = () => {
         <motion.div
             id="services"
             className="mt-20 tracking-wide relative overflow-hidden py-8"
+            ref={ref}
             initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
+            animate={isVisible ? "visible" : "hidden"}
             variants={containerVariants}
         >
             {/* Background decorations */}

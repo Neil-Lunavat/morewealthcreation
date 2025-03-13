@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import emailjs, { init } from "@emailjs/browser";
 import { motion, useInView } from "framer-motion";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
@@ -17,15 +18,7 @@ const BookingForm = () => {
     });
     const [loading, setLoading] = useState(false);
     const [submitStatus, setSubmitStatus] = useState({ type: "", message: "" });
-    const [isVisible, setIsVisible] = useState(false);
-    const formRef = useRef(null);
-    const isInView = useInView(formRef, { once: true, amount: 0.1 });
-
-    useEffect(() => {
-        if (isInView) {
-            setIsVisible(true);
-        }
-    }, [isInView]);
+    const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
 
     // Get current timezone for display
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -206,7 +199,7 @@ const BookingForm = () => {
         <motion.div
             id="bookingform"
             className="flex flex-col items-center mt-6 lg:mt-20 px-4"
-            ref={formRef}
+            ref={ref}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
             variants={containerVariants}

@@ -2,19 +2,12 @@ import { CheckCircle2 } from "lucide-react";
 import { pricingOptions } from "../constants";
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const Pricing = () => {
     const [activeCard, setActiveCard] = useState(null);
     const [isIndianUser, setIsIndianUser] = useState(true);
-    const [isVisible, setIsVisible] = useState(false);
-    const containerRef = useRef(null);
-    const isInView = useInView(containerRef, { once: true, amount: 0.5 });
-
-    useEffect(() => {
-        if (isInView) {
-            setIsVisible(true);
-        }
-    }, [isInView]);
+    const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
 
     // Detect user's country based on their locale
     useEffect(() => {
@@ -138,7 +131,7 @@ const Pricing = () => {
         <motion.div
             id="pricing"
             className="mt-20 px-4"
-            ref={containerRef}
+            ref={ref}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
             variants={containerVariants}

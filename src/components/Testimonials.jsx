@@ -1,19 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { testimonials } from "../constants";
 import { Star } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const Testimonials = () => {
     const [activeCard, setActiveCard] = useState(null);
-    const [isVisible, setIsVisible] = useState(false);
-    const containerRef = useRef(null);
-    const isInView = useInView(containerRef, { once: true, amount: 0.2 });
-
-    useEffect(() => {
-        if (isInView) {
-            setIsVisible(true);
-        }
-    }, [isInView]);
+    const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
 
     // Render star ratings
     const renderStars = (rating) => {
@@ -125,7 +118,7 @@ const Testimonials = () => {
         <motion.div
             id="testimonials"
             className="mt-20 tracking-wide relative overflow-hidden py-8"
-            ref={containerRef}
+            ref={ref}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
             variants={containerVariants}
@@ -314,5 +307,4 @@ const Testimonials = () => {
         </motion.div>
     );
 };
-
 export default Testimonials;

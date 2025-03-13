@@ -3,17 +3,10 @@ import codeImg from "../assets/code.avif";
 import { checklistItems } from "../constants";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const Workflow = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const containerRef = useRef(null);
-    const isInView = useInView(containerRef, { once: true, amount: 0.2 });
-
-    useEffect(() => {
-        if (isInView) {
-            setIsVisible(true);
-        }
-    }, [isInView]);
+    const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
 
     // Animation variants
     const containerVariants = {
@@ -103,7 +96,7 @@ const Workflow = () => {
         <motion.div
             id="workflow"
             className="mt-16 px-4 sm:px-6 lg:px-10 py-10"
-            ref={containerRef}
+            ref={ref}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
             variants={containerVariants}
