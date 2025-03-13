@@ -66,7 +66,7 @@ export const testimonials = [
     },
 ];
 
-export const features = [
+export const services = [
     {
         icon: <TrendingUp />,
         text: "One-on-One Financial Coaching",

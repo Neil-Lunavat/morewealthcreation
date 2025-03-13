@@ -2,7 +2,7 @@ import { features } from "../constants";
 import { MoveDown, ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const FeatureSection = () => {
+const Services = () => {
     const [expandedFeatures, setExpandedFeatures] = useState({});
     const [screenSize, setScreenSize] = useState("desktop");
 
@@ -133,4 +133,4 @@ const FeatureSection = () => {
     );
 };
 
-export default FeatureSection;
+export default Services;
