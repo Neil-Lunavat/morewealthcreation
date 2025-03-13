@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import emailjs, { init } from "@emailjs/browser";
+import { motion, useInView } from "framer-motion";
 
 init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
@@ -16,6 +17,15 @@ const BookingForm = () => {
     });
     const [loading, setLoading] = useState(false);
     const [submitStatus, setSubmitStatus] = useState({ type: "", message: "" });
+    const [isVisible, setIsVisible] = useState(false);
+    const formRef = useRef(null);
+    const isInView = useInView(formRef, { once: true, amount: 0.1 });
+
+    useEffect(() => {
+        if (isInView) {
+            setIsVisible(true);
+        }
+    }, [isInView]);
 
     // Get current timezone for display
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -98,43 +108,171 @@ const BookingForm = () => {
     maxDate.setMonth(maxDate.getMonth() + 1);
     const maxDateStr = maxDate.toISOString().split("T")[0];
 
+    // Animation variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                when: "beforeChildren",
+                staggerChildren: 0.1,
+                delayChildren: 0.2,
+            },
+        },
+    };
+
+    const titleVariants = {
+        hidden: { opacity: 0, y: -20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.6,
+                ease: "easeOut",
+            },
+        },
+    };
+
+    const descriptionVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.6,
+                ease: "easeOut",
+                delay: 0.2,
+            },
+        },
+    };
+
+    const formItemVariants = {
+        hidden: { opacity: 0, x: -20 },
+        visible: (i) => ({
+            opacity: 1,
+            x: 0,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay: i * 0.1,
+            },
+        }),
+    };
+
+    const buttonVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: 0.8,
+                duration: 0.4,
+            },
+        },
+        hover: {
+            scale: 1.05,
+            transition: {
+                duration: 0.2,
+            },
+        },
+        tap: {
+            scale: 0.98,
+        },
+    };
+
+    const statusVariants = {
+        hidden: { opacity: 0, height: 0, y: -10 },
+        visible: {
+            opacity: 1,
+            height: "auto",
+            y: 0,
+            transition: {
+                duration: 0.3,
+                ease: "easeOut",
+            },
+        },
+        exit: {
+            opacity: 0,
+            height: 0,
+            y: -10,
+            transition: {
+                duration: 0.2,
+            },
+        },
+    };
+
     return (
-        <div
+        <motion.div
             id="bookingform"
             className="flex flex-col items-center mt-6 lg:mt-20 px-4"
+            ref={formRef}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
+            variants={containerVariants}
         >
-            <h2 className="text-4xl sm:text-6xl lg:text-7xl text-center tracking-wide">
+            <motion.h2
+                className="text-4xl sm:text-6xl lg:text-7xl text-center tracking-wide"
+                variants={titleVariants}
+            >
                 Book a
-                <span className="bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text">
+                <motion.span
+                    className="bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text"
+                    initial={{ backgroundPosition: "0% 50%" }}
+                    animate={{
+                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    transition={{
+                        duration: 6,
+                        ease: "linear",
+                        repeat: Infinity,
+                    }}
+                >
                     {" "}
                     Free Consultation{" "}
-                </span>
+                </motion.span>
                 Call
-            </h2>
+            </motion.h2>
 
-            <p className="mt-6 text-lg text-center text-neutral-500 max-w-2xl">
+            <motion.p
+                className="mt-6 text-lg text-center text-neutral-500 max-w-2xl"
+                variants={descriptionVariants}
+            >
                 Take the first step towards your financial goals. Schedule a
                 one-on-one consultation to discuss your unique situation and
                 learning objectives.
-            </p>
+            </motion.p>
 
             {submitStatus.message && (
-                <div
+                <motion.div
                     className={`mt-4 p-4 rounded-lg w-full max-w-2xl ${
                         submitStatus.type === "success"
                             ? "bg-green-900/50 text-green-300"
                             : "bg-red-900/50 text-red-300"
                     }`}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={statusVariants}
                 >
                     {submitStatus.message}
-                </div>
+                </motion.div>
             )}
 
-            <form onSubmit={handleSubmit} className="mt-10 w-full max-w-2xl">
+            <motion.form
+                onSubmit={handleSubmit}
+                className="mt-10 w-full max-w-2xl"
+                variants={containerVariants}
+            >
                 <div className="space-y-6">
                     {/* Name Input */}
-                    <div className="relative group">
-                        <input
+                    <motion.div
+                        className="relative group"
+                        custom={0}
+                        variants={formItemVariants}
+                        whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                    >
+                        <motion.input
                             type="text"
                             name="name"
                             value={formData.name}
@@ -144,18 +282,28 @@ const BookingForm = () => {
                                      group-hover:border-orange-600"
                             placeholder=" "
                             required
+                            whileFocus={{
+                                borderColor: "rgb(249, 115, 22)",
+                                transition: { duration: 0.3 },
+                            }}
                         />
-                        <label
+                        <motion.label
                             className="absolute left-4 -top-3 bg-neutral-900 px-2 text-sm text-neutral-400 
                                         group-hover:text-orange-500 transition-colors duration-300"
+                            whileHover={{ color: "rgb(249, 115, 22)" }}
                         >
                             Your Name
-                        </label>
-                    </div>
+                        </motion.label>
+                    </motion.div>
 
                     {/* Email Input */}
-                    <div className="relative group">
-                        <input
+                    <motion.div
+                        className="relative group"
+                        custom={1}
+                        variants={formItemVariants}
+                        whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                    >
+                        <motion.input
                             type="email"
                             name="email"
                             value={formData.email}
@@ -165,19 +313,31 @@ const BookingForm = () => {
                                      group-hover:border-orange-600"
                             placeholder=" "
                             required
+                            whileFocus={{
+                                borderColor: "rgb(249, 115, 22)",
+                                transition: { duration: 0.3 },
+                            }}
                         />
-                        <label
+                        <motion.label
                             className="absolute left-4 -top-3 bg-neutral-900 px-2 text-sm text-neutral-400 
                                         group-hover:text-orange-500 transition-colors duration-300"
+                            whileHover={{ color: "rgb(249, 115, 22)" }}
                         >
                             Email Address
-                        </label>
-                    </div>
+                        </motion.label>
+                    </motion.div>
 
                     {/* Date and Time Selection */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="relative group">
-                            <input
+                    <motion.div
+                        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                        custom={2}
+                        variants={formItemVariants}
+                    >
+                        <motion.div
+                            className="relative group"
+                            whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                        >
+                            <motion.input
                                 type="date"
                                 name="date"
                                 value={formData.date}
@@ -189,18 +349,26 @@ const BookingForm = () => {
                      group-hover:border-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
                                 required
                                 onKeyDown={(e) => e.preventDefault()}
+                                whileFocus={{
+                                    borderColor: "rgb(249, 115, 22)",
+                                    transition: { duration: 0.3 },
+                                }}
                             />
-                            <label
+                            <motion.label
                                 className="absolute left-4 -top-3 bg-neutral-900 px-2 text-sm text-neutral-400 
                         group-hover:text-orange-500 transition-colors duration-300"
+                                whileHover={{ color: "rgb(249, 115, 22)" }}
                             >
                                 Preferred Date
-                            </label>
-                        </div>
+                            </motion.label>
+                        </motion.div>
 
-                        <div className="relative group col-span-2">
+                        <motion.div
+                            className="relative group col-span-2"
+                            whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                        >
                             <div className="flex items-center gap-4">
-                                <select
+                                <motion.select
                                     name="hour"
                                     value={formData.hour}
                                     onChange={handleChange}
@@ -208,6 +376,10 @@ const BookingForm = () => {
                          focus:outline-none focus:border-orange-500 transition-colors duration-300
                          group-hover:border-orange-600"
                                     required
+                                    whileFocus={{
+                                        borderColor: "rgb(249, 115, 22)",
+                                        transition: { duration: 0.3 },
+                                    }}
                                 >
                                     <option value="" disabled>
                                         Hour
@@ -217,9 +389,9 @@ const BookingForm = () => {
                                             {i + 1}
                                         </option>
                                     ))}
-                                </select>
+                                </motion.select>
 
-                                <select
+                                <motion.select
                                     name="minute"
                                     value={formData.minute}
                                     onChange={handleChange}
@@ -227,15 +399,19 @@ const BookingForm = () => {
                          focus:outline-none focus:border-orange-500 transition-colors duration-300
                          group-hover:border-orange-600"
                                     required
+                                    whileFocus={{
+                                        borderColor: "rgb(249, 115, 22)",
+                                        transition: { duration: 0.3 },
+                                    }}
                                 >
                                     <option value="" disabled>
                                         Minute
                                     </option>
                                     <option value="00">00</option>
                                     <option value="30">30</option>
-                                </select>
+                                </motion.select>
 
-                                <select
+                                <motion.select
                                     name="period"
                                     value={formData.period}
                                     onChange={handleChange}
@@ -243,26 +419,36 @@ const BookingForm = () => {
                          focus:outline-none focus:border-orange-500 transition-colors duration-300
                          group-hover:border-orange-600"
                                     required
+                                    whileFocus={{
+                                        borderColor: "rgb(249, 115, 22)",
+                                        transition: { duration: 0.3 },
+                                    }}
                                 >
                                     <option value="" disabled>
                                         AM/PM
                                     </option>
                                     <option value="AM">AM</option>
                                     <option value="PM">PM</option>
-                                </select>
+                                </motion.select>
                             </div>
-                            <label
+                            <motion.label
                                 className="absolute left-4 -top-3 bg-neutral-900 px-2 text-sm text-neutral-400 
                         group-hover:text-orange-500 transition-colors duration-300"
+                                whileHover={{ color: "rgb(249, 115, 22)" }}
                             >
                                 Preferred Time
-                            </label>
-                        </div>
-                    </div>
+                            </motion.label>
+                        </motion.div>
+                    </motion.div>
 
                     {/* Message Input */}
-                    <div className="relative group">
-                        <textarea
+                    <motion.div
+                        className="relative group"
+                        custom={3}
+                        variants={formItemVariants}
+                        whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                    >
+                        <motion.textarea
                             name="message"
                             value={formData.message}
                             onChange={handleChange}
@@ -271,30 +457,64 @@ const BookingForm = () => {
                                      focus:outline-none focus:border-orange-500 transition-colors duration-300
                                      group-hover:border-orange-600"
                             placeholder=" "
+                            whileFocus={{
+                                borderColor: "rgb(249, 115, 22)",
+                                transition: { duration: 0.3 },
+                            }}
                         />
-                        <label
+                        <motion.label
                             className="absolute left-4 -top-3 bg-neutral-900 px-2 text-sm text-neutral-400 
                                         group-hover:text-orange-500 transition-colors duration-300"
+                            whileHover={{ color: "rgb(249, 115, 22)" }}
                         >
                             Message (Optional)
-                        </label>
-                    </div>
+                        </motion.label>
+                    </motion.div>
 
                     {/* Submit Button */}
-                    <button
+                    <motion.button
                         type="submit"
                         disabled={loading}
-                        className="relative w-full group overflow-hidden rounded-lg h-14 hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="relative w-full group overflow-hidden rounded-lg h-14 disabled:opacity-50 disabled:cursor-not-allowed"
+                        variants={buttonVariants}
+                        whileHover="hover"
+                        whileTap="tap"
                     >
-                        <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
-                        <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
+                        <motion.span
+                            className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0"
+                            initial={{ opacity: 1 }}
+                            whileHover={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                        />
+                        <motion.span
+                            className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg"
+                            initial={{ borderColor: "transparent" }}
+                            whileHover={{ borderColor: "rgb(249, 115, 22)" }}
+                            transition={{ duration: 0.3 }}
+                        />
                         <span className="relative z-10 text-white text-lg font-medium">
-                            {loading ? "Sending..." : "Schedule Consultation"}
+                            {loading ? (
+                                <motion.span
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    Sending...
+                                </motion.span>
+                            ) : (
+                                <motion.span
+                                    initial={{ scale: 1 }}
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    Schedule Consultation
+                                </motion.span>
+                            )}
                         </span>
-                    </button>
+                    </motion.button>
                 </div>
-            </form>
-        </div>
+            </motion.form>
+        </motion.div>
     );
 };
 

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { services } from "../constants";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Services = () => {
     const [activeCard, setActiveCard] = useState(null);
     const [expandedServices, setExpandedServices] = useState({});
     const [isMobile, setIsMobile] = useState(false);
+    const [isInView, setIsInView] = useState(false);
 
     // Check screen size for responsive behavior
     useEffect(() => {
@@ -19,8 +21,16 @@ const Services = () => {
         // Add event listener
         window.addEventListener("resize", checkScreenSize);
 
+        // Set isInView to true after component mounts
+        const timer = setTimeout(() => {
+            setIsInView(true);
+        }, 100);
+
         // Clean up
-        return () => window.removeEventListener("resize", checkScreenSize);
+        return () => {
+            window.removeEventListener("resize", checkScreenSize);
+            clearTimeout(timer);
+        };
     }, []);
 
     const toggleService = (index) => {
@@ -32,38 +42,120 @@ const Services = () => {
         }
     };
 
+    // Animation variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.2,
+            },
+        },
+    };
+
+    const titleVariants = {
+        hidden: { opacity: 0, y: -20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.6,
+                ease: "easeOut",
+            },
+        },
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 30 },
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.5,
+                ease: [0.25, 0.1, 0.25, 1.0],
+                delay: 0.4 + i * 0.1,
+            },
+        }),
+    };
+
+    const iconContainerVariants = {
+        hidden: { scale: 0.8, opacity: 0 },
+        visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+            },
+        },
+        hover: {
+            scale: 1.1,
+            backgroundColor: "rgba(249, 115, 22, 0.2)",
+            transition: {
+                duration: 0.2,
+                ease: "easeInOut",
+            },
+        },
+    };
+
     return (
-        <div
+        <motion.div
             id="services"
             className="mt-20 tracking-wide relative overflow-hidden py-8"
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            variants={containerVariants}
         >
             {/* Background decorations */}
-            <div className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-br from-orange-500/10 to-red-800/10 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-gradient-to-tr from-orange-500/10 to-red-800/10 rounded-full blur-3xl"></div>
+            <motion.div
+                className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-br from-orange-500/10 to-red-800/10 rounded-full blur-3xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5 }}
+            />
+            <motion.div
+                className="absolute -bottom-40 -right-40 w-80 h-80 bg-gradient-to-tr from-orange-500/10 to-red-800/10 rounded-full blur-3xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5, delay: 0.3 }}
+            />
 
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center my-10 lg:my-16 font-semibold">
-                <span className="bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">
+            <motion.h2
+                className="text-3xl sm:text-5xl lg:text-6xl text-center my-10 lg:my-16 font-semibold"
+                variants={titleVariants}
+            >
+                <motion.span
+                    className="bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text"
+                    initial={{ backgroundPosition: "0% 50%" }}
+                    animate={{
+                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    transition={{
+                        duration: 10,
+                        ease: "linear",
+                        repeat: Infinity,
+                    }}
+                >
                     Services
-                </span>{" "}
+                </motion.span>{" "}
                 we provide
-            </h2>
+            </motion.h2>
 
             <div className="flex flex-wrap justify-center max-w-7xl mx-auto">
                 {services.map((service, index) => (
-                    <div
+                    <motion.div
                         key={index}
                         className="w-full sm:w-1/2 lg:w-1/3 px-4 py-3 transition-transform duration-300 hover:-translate-y-1"
-                        style={{
-                            opacity: 0,
-                            animation: `fadeIn 0.5s ease-out ${
-                                index * 150
-                            }ms forwards`,
-                        }}
+                        custom={index}
+                        variants={cardVariants}
                         onMouseEnter={() => setActiveCard(index)}
                         onMouseLeave={() => setActiveCard(null)}
                         onClick={() => toggleService(index)}
+                        whileHover={{ y: -5 }}
                     >
-                        <div
+                        <motion.div
                             className={`relative rounded-xl p-6 text-md h-full 
                                 transition-all duration-500 
                                 ${
@@ -73,85 +165,118 @@ const Services = () => {
                                 }
                                 ${isMobile ? "cursor-pointer" : ""}
                             `}
+                            animate={
+                                activeCard === index
+                                    ? { scale: 1.02 }
+                                    : { scale: 1 }
+                            }
+                            transition={{ duration: 0.2 }}
                         >
                             {/* Subtle gradient overlay that appears on hover */}
-                            <div
-                                className={`absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl transition-opacity duration-300 ${
-                                    activeCard === index
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                }`}
-                            ></div>
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl"
+                                initial={{ opacity: 0 }}
+                                animate={{
+                                    opacity: activeCard === index ? 1 : 0,
+                                }}
+                                transition={{ duration: 0.3 }}
+                            />
 
                             <div className="flex items-start mb-3">
-                                <div
-                                    className={`flex-shrink-0 h-12 w-12 rounded-full 
+                                <motion.div
+                                    className="flex-shrink-0 h-12 w-12 rounded-full 
                                     flex justify-center items-center mr-4 
                                     bg-gradient-to-br from-orange-500/10 to-red-800/10
-                                    text-orange-500 transition-all duration-300
-                                    ${
-                                        activeCard === index
-                                            ? "from-orange-500/20 to-red-800/20 scale-110"
-                                            : ""
-                                    }
-                                    `}
+                                    text-orange-500"
+                                    variants={iconContainerVariants}
+                                    whileHover="hover"
                                 >
-                                    <div className="relative z-10">
+                                    <motion.div
+                                        className="relative z-10"
+                                        initial={{ rotate: -5 }}
+                                        animate={
+                                            activeCard === index
+                                                ? { rotate: 0, scale: 1.1 }
+                                                : { rotate: 0, scale: 1 }
+                                        }
+                                        transition={{ duration: 0.3 }}
+                                    >
                                         {service.icon}
-                                    </div>
-                                </div>
+                                    </motion.div>
+                                </motion.div>
 
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
-                                        <h5 className="text-lg font-medium text-white">
+                                        <motion.h5
+                                            className="text-lg font-medium text-white"
+                                            animate={
+                                                activeCard === index
+                                                    ? {
+                                                          color: "rgb(249, 115, 22)",
+                                                          transition: {
+                                                              duration: 0.3,
+                                                          },
+                                                      }
+                                                    : {
+                                                          color: "rgb(255, 255, 255)",
+                                                          transition: {
+                                                              duration: 0.3,
+                                                          },
+                                                      }
+                                            }
+                                        >
                                             {service.text}
-                                        </h5>
+                                        </motion.h5>
                                         {isMobile && (
-                                            <span className="text-orange-500 ml-2">
+                                            <motion.span
+                                                className="text-orange-500 ml-2"
+                                                animate={{
+                                                    rotate: expandedServices[
+                                                        index
+                                                    ]
+                                                        ? 180
+                                                        : 0,
+                                                }}
+                                                transition={{ duration: 0.3 }}
+                                            >
                                                 {expandedServices[index] ? (
                                                     <ChevronUp size={20} />
                                                 ) : (
                                                     <ChevronDown size={20} />
                                                 )}
-                                            </span>
+                                            </motion.span>
                                         )}
                                     </div>
                                 </div>
                             </div>
 
-                            <div
-                                className={`relative z-10 text-neutral-400 pl-16 transition-all duration-300
-                                    ${
-                                        isMobile && !expandedServices[index]
-                                            ? "max-h-0 opacity-0 overflow-hidden"
-                                            : isMobile &&
-                                              expandedServices[index]
-                                            ? "max-h-96 opacity-100 pt-2"
-                                            : "opacity-100"
-                                    }
-                                `}
+                            <motion.div
+                                className="relative z-10 text-neutral-400 pl-16"
+                                initial={{
+                                    height: isMobile ? 0 : "auto",
+                                    opacity: isMobile ? 0 : 1,
+                                }}
+                                animate={{
+                                    height: isMobile
+                                        ? expandedServices[index]
+                                            ? "auto"
+                                            : 0
+                                        : "auto",
+                                    opacity: isMobile
+                                        ? expandedServices[index]
+                                            ? 1
+                                            : 0
+                                        : 1,
+                                }}
+                                transition={{ duration: 0.3 }}
                             >
                                 {service.description}
-                            </div>
-                        </div>
-                    </div>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
                 ))}
             </div>
-
-            {/* Animation keyframes */}
-            <style>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-            `}</style>
-        </div>
+        </motion.div>
     );
 };
 

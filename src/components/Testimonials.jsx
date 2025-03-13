@@ -1,62 +1,180 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { testimonials } from "../constants";
 import { Star } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 
 const Testimonials = () => {
     const [activeCard, setActiveCard] = useState(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const containerRef = useRef(null);
+    const isInView = useInView(containerRef, { once: true, amount: 0.2 });
+
+    useEffect(() => {
+        if (isInView) {
+            setIsVisible(true);
+        }
+    }, [isInView]);
 
     // Render star ratings
     const renderStars = (rating) => {
         return (
             <div className="flex items-center mt-1">
                 {[...Array(5)].map((_, i) => (
-                    <Star
+                    <motion.div
                         key={i}
-                        size={14}
-                        className={`${
-                            i < Math.floor(rating)
-                                ? "text-yellow-400 fill-yellow-400"
-                                : i < rating
-                                ? "text-yellow-400 fill-yellow-400 opacity-60"
-                                : "text-gray-600"
-                        } mr-0.5`}
-                    />
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                            delay: 0.2 + i * 0.1,
+                            type: "spring",
+                            stiffness: 260,
+                            damping: 20,
+                        }}
+                    >
+                        <Star
+                            size={14}
+                            className={`${
+                                i < Math.floor(rating)
+                                    ? "text-yellow-400 fill-yellow-400"
+                                    : i < rating
+                                    ? "text-yellow-400 fill-yellow-400 opacity-60"
+                                    : "text-gray-600"
+                            } mr-0.5`}
+                        />
+                    </motion.div>
                 ))}
             </div>
         );
     };
 
+    // Animation variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.2,
+            },
+        },
+    };
+
+    const titleVariants = {
+        hidden: { opacity: 0, y: -20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.4,
+                ease: "easeOut",
+            },
+        },
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 30 },
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.5,
+                ease: [0.25, 0.1, 0.25, 1.0],
+                delay: 0.1 + i * 0.1,
+            },
+        }),
+        hover: {
+            y: -8,
+            transition: {
+                duration: 0.3,
+                ease: "easeOut",
+            },
+        },
+    };
+
+    const quoteVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: {
+            opacity: 0.8,
+            scale: 1,
+            transition: {
+                duration: 0.4,
+                ease: "easeOut",
+            },
+        },
+        hover: {
+            scale: 1.1,
+            opacity: 1,
+            y: -2,
+            transition: { duration: 0.3 },
+        },
+    };
+
+    const backgroundCircleVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            transition: {
+                duration: 1.5,
+                ease: "easeOut",
+            },
+        },
+    };
+
     return (
-        <div
+        <motion.div
             id="testimonials"
             className="mt-20 tracking-wide relative overflow-hidden py-8"
+            ref={containerRef}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
+            variants={containerVariants}
         >
             {/* Background decorations */}
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-orange-500/10 to-red-800/10 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-orange-500/10 to-red-800/10 rounded-full blur-3xl"></div>
+            <motion.div
+                className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-orange-500/10 to-red-800/10 rounded-full blur-3xl"
+                variants={backgroundCircleVariants}
+                custom={0}
+            />
+            <motion.div
+                className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-orange-500/10 to-red-800/10 rounded-full blur-3xl"
+                variants={backgroundCircleVariants}
+                custom={1}
+            />
 
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center my-10 lg:my-16 font-semibold">
+            <motion.h2
+                className="text-3xl sm:text-5xl lg:text-6xl text-center my-10 lg:my-16 font-semibold"
+                variants={titleVariants}
+            >
                 What People are{" "}
-                <span className="bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text">
+                <motion.span
+                    className="bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text"
+                    initial={{ backgroundPosition: "0% 50%" }}
+                    animate={{
+                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    transition={{
+                        duration: 8,
+                        ease: "linear",
+                        repeat: Infinity,
+                    }}
+                >
                     Saying
-                </span>
-            </h2>
+                </motion.span>
+            </motion.h2>
 
             <div className="flex flex-wrap justify-center max-w-7xl mx-auto">
                 {testimonials.map((testimonial, index) => (
-                    <div
+                    <motion.div
                         key={index}
-                        className="w-full sm:w-1/2 lg:w-1/3 px-4 py-3 transition-transform duration-300 hover:-translate-y-1"
-                        style={{
-                            opacity: 0,
-                            animation: `fadeIn 0.5s ease-out ${
-                                index * 150
-                            }ms forwards`,
-                        }}
+                        className="w-full sm:w-1/2 lg:w-1/3 px-4 py-3"
+                        custom={index}
+                        variants={cardVariants}
+                        whileHover="hover"
                         onMouseEnter={() => setActiveCard(index)}
                         onMouseLeave={() => setActiveCard(null)}
                     >
-                        <div
+                        <motion.div
                             className={`relative rounded-xl p-6 text-md h-full 
                                 transition-all duration-500 
                                 ${
@@ -65,86 +183,135 @@ const Testimonials = () => {
                                         : "bg-neutral-900 border border-neutral-800"
                                 }
                             `}
+                            animate={
+                                activeCard === index
+                                    ? {
+                                          scale: 1.02,
+                                          borderColor: "rgba(194, 65, 12, 0.3)", // border-orange-700/30
+                                          boxShadow:
+                                              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                                      }
+                                    : {
+                                          scale: 1,
+                                          borderColor: "rgba(38, 38, 38, 1)", // border-neutral-800
+                                          boxShadow: "none",
+                                      }
+                            }
+                            transition={{ duration: 0.3 }}
                         >
                             {/* Subtle gradient overlay that appears on hover */}
-                            <div
-                                className={`absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl transition-opacity duration-300 ${
-                                    activeCard === index
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                }`}
-                            ></div>
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl"
+                                initial={{ opacity: 0 }}
+                                animate={{
+                                    opacity: activeCard === index ? 1 : 0,
+                                }}
+                                transition={{ duration: 0.3 }}
+                            />
 
                             {/* Animated decorative quotes */}
-                            <div
-                                className="text-orange-500 text-3xl opacity-80 mb-2 transition-transform duration-300 transform translate-y-0"
-                                style={{
-                                    transform:
-                                        activeCard === index
-                                            ? "translateY(-2px) scale(1.05)"
-                                            : "translateY(0) scale(1)",
-                                }}
+                            <motion.div
+                                className="text-orange-500 text-3xl mb-2"
+                                variants={quoteVariants}
+                                animate={
+                                    activeCard === index ? "hover" : "visible"
+                                }
                             >
                                 "
-                            </div>
+                            </motion.div>
 
-                            <p className="text-gray-200 relative z-10 transition-colors duration-300">
+                            <motion.p
+                                className="text-gray-200 relative z-10"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{
+                                    delay: 0.3 + index * 0.05,
+                                    duration: 0.4,
+                                }}
+                            >
                                 {testimonial.text}
-                            </p>
+                            </motion.p>
 
-                            <div
-                                className="text-orange-500 text-3xl opacity-80 text-right transition-transform duration-300"
-                                style={{
-                                    transform:
-                                        activeCard === index
-                                            ? "translateY(2px) scale(1.05)"
-                                            : "translateY(0) scale(1)",
-                                }}
+                            <motion.div
+                                className="text-orange-500 text-3xl text-right"
+                                variants={quoteVariants}
+                                animate={
+                                    activeCard === index ? "hover" : "visible"
+                                }
+                                style={{ transformOrigin: "right bottom" }}
                             >
                                 "
-                            </div>
+                            </motion.div>
 
-                            <div className="relative z-10 mt-6 pt-4 border-t border-neutral-800 flex items-start">
-                                <div className="relative">
-                                    <img
-                                        className={`w-12 h-12 mr-4 rounded-full object-cover transition-all duration-300 ${
+                            <motion.div
+                                className="relative z-10 mt-6 pt-4 border-t border-neutral-800 flex items-start"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    delay: 0.5 + index * 0.05,
+                                    duration: 0.4,
+                                }}
+                            >
+                                <motion.div className="relative">
+                                    <motion.img
+                                        className={`w-12 h-12 mr-4 rounded-full object-cover ${
                                             activeCard === index
-                                                ? "border-2 border-orange-500 transform scale-105"
+                                                ? "border-2 border-orange-500"
                                                 : "border border-neutral-700"
                                         }`}
                                         src={testimonial.image}
                                         alt={testimonial.user}
+                                        initial={{ scale: 0.9 }}
+                                        animate={
+                                            activeCard === index
+                                                ? {
+                                                      scale: 1.05,
+                                                      borderColor:
+                                                          "rgb(249, 115, 22)", // border-orange-500
+                                                      borderWidth: "2px",
+                                                  }
+                                                : {
+                                                      scale: 1,
+                                                      borderColor:
+                                                          "rgb(64, 64, 64)", // border-neutral-700
+                                                      borderWidth: "1px",
+                                                  }
+                                        }
+                                        transition={{ duration: 0.3 }}
+                                        whileHover={{ scale: 1.1 }}
                                     />
-                                </div>
+                                </motion.div>
                                 <div>
-                                    <h6 className="font-medium text-white">
+                                    <motion.h6
+                                        className="font-medium text-white"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{
+                                            delay: 0.6 + index * 0.05,
+                                            duration: 0.3,
+                                        }}
+                                    >
                                         {testimonial.user}
-                                    </h6>
-                                    <span className="text-sm font-normal text-neutral-500">
+                                    </motion.h6>
+                                    <motion.span
+                                        className="text-sm font-normal text-neutral-500"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{
+                                            delay: 0.7 + index * 0.05,
+                                            duration: 0.3,
+                                        }}
+                                    >
                                         {testimonial.company}
-                                    </span>
+                                    </motion.span>
                                     {renderStars(testimonial.stars)}
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
                 ))}
             </div>
-
-            {/* Animation keyframes */}
-            <style>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-            `}</style>
-        </div>
+        </motion.div>
     );
 };
 

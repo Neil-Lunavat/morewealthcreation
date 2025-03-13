@@ -1,10 +1,20 @@
 import { CheckCircle2 } from "lucide-react";
 import { pricingOptions } from "../constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 const Pricing = () => {
     const [activeCard, setActiveCard] = useState(null);
     const [isIndianUser, setIsIndianUser] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
+    const containerRef = useRef(null);
+    const isInView = useInView(containerRef, { once: true, amount: 0.5 });
+
+    useEffect(() => {
+        if (isInView) {
+            setIsVisible(true);
+        }
+    }, [isInView]);
 
     // Detect user's country based on their locale
     useEffect(() => {
@@ -23,137 +33,331 @@ const Pricing = () => {
         }
     }, []);
 
+    // Animation variants
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.1,
+            },
+        },
+    };
+
+    const titleVariants = {
+        hidden: { opacity: 0, y: -20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.6,
+                ease: "easeOut",
+            },
+        },
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay: 0.2 + i * 0.15,
+            },
+        }),
+        hover: {
+            y: -10,
+            transition: {
+                type: "spring",
+                stiffness: 300,
+                damping: 15,
+            },
+        },
+    };
+
+    const priceVariants = {
+        hidden: { scale: 0.9, opacity: 0 },
+        visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+                delay: 0.4,
+                type: "spring",
+                stiffness: 200,
+                damping: 15,
+            },
+        },
+        active: {
+            scale: 1.05,
+            transition: {
+                duration: 0.3,
+            },
+        },
+    };
+
+    const featureItemVariants = {
+        hidden: { opacity: 0, x: -10 },
+        visible: (i) => ({
+            opacity: 1,
+            x: 0,
+            transition: {
+                delay: 0.5 + i * 0.07,
+                duration: 0.3,
+            },
+        }),
+    };
+
+    const buttonVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: 0.8,
+                type: "spring",
+                stiffness: 150,
+                damping: 15,
+            },
+        },
+        hover: {
+            scale: 1.05,
+            transition: {
+                duration: 0.2,
+            },
+        },
+        tap: {
+            scale: 0.98,
+        },
+    };
+
     return (
-        <div id="pricing" className="mt-20 px-4">
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center my-8 tracking-wide">
+        <motion.div
+            id="pricing"
+            className="mt-20 px-4"
+            ref={containerRef}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
+            variants={containerVariants}
+        >
+            <motion.h2
+                className="text-3xl sm:text-5xl lg:text-6xl text-center my-8 tracking-wide"
+                variants={titleVariants}
+            >
                 Pricing
-            </h2>
+            </motion.h2>
 
             {/* Cards container - ensure all 3 cards appear in one line on desktop */}
             <div className="flex flex-wrap justify-center gap-4 md:gap-6 max-w-7xl mx-auto">
                 {pricingOptions.map((option, index) => (
-                    <div
+                    <motion.div
                         key={index}
                         className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3 xl:flex-1 p-2 md:p-4 transition-all duration-300"
                         onMouseEnter={() => setActiveCard(index)}
                         onMouseLeave={() => setActiveCard(null)}
+                        custom={index}
+                        variants={cardVariants}
+                        whileHover="hover"
                     >
-                        <div
+                        <motion.div
                             className={`p-6 md:p-8 border rounded-xl text-center h-full transition-all duration-500 relative overflow-hidden
                                 ${
                                     activeCard === index
-                                        ? "border-orange-500/50 shadow-lg shadow-orange-500/10 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 transform -translate-y-2"
+                                        ? "border-orange-500/50 shadow-lg shadow-orange-500/10 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900"
                                         : "border-neutral-700 bg-neutral-900"
                                 }
                             `}
+                            animate={
+                                activeCard === index
+                                    ? {
+                                          borderColor:
+                                              "rgba(249, 115, 22, 0.5)", // border-orange-500/50
+                                          boxShadow:
+                                              "0 10px 25px -5px rgba(249, 115, 22, 0.1)", // shadow-lg shadow-orange-500/10
+                                          backgroundImage:
+                                              "linear-gradient(to bottom right, rgba(23, 23, 23, 1), rgba(38, 38, 38, 1), rgba(23, 23, 23, 1))",
+                                      }
+                                    : {
+                                          borderColor: "rgba(64, 64, 64, 1)", // border-neutral-700
+                                          boxShadow: "none",
+                                          backgroundImage: "none",
+                                          backgroundColor:
+                                              "rgba(23, 23, 23, 1)", // bg-neutral-900
+                                      }
+                            }
+                            transition={{ duration: 0.3 }}
                         >
-                            {/* Subtle gradient overlay that appears on hover */}
-                            <div
-                                className={`absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl transition-opacity duration-300
-                                    ${
-                                        activeCard === index
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                    }
-                                `}
-                            ></div>
-
                             {/* Top orange accent line that animates on hover */}
-                            <div
-                                className={`absolute top-0 left-0 right-0 h-1 transition-all duration-300
-                                    ${
-                                        activeCard === index
-                                            ? "bg-gradient-to-r from-orange-500 to-red-800"
-                                            : "bg-transparent"
-                                    }
-                                `}
-                            ></div>
+                            <motion.div
+                                className="absolute top-0 left-0 right-0 h-1"
+                                initial={{ width: "0%" }}
+                                animate={
+                                    activeCard === index
+                                        ? {
+                                              width: "100%",
+                                              background:
+                                                  "linear-gradient(to right, #f97316, #991b1b)",
+                                          }
+                                        : {
+                                              width: "0%",
+                                              background: "transparent",
+                                          }
+                                }
+                                transition={{ duration: 0.4 }}
+                            />
 
-                            <p className="text-3xl md:text-4xl mb-2 font-semibold relative z-10">
+                            <motion.p
+                                className="text-3xl md:text-4xl mb-2 font-semibold relative z-10"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{
+                                    delay: 0.3 + index * 0.1,
+                                    duration: 0.4,
+                                }}
+                            >
                                 {option.title}
                                 {option.title === "Intermediate" && (
-                                    <span className="bg-gradient-to-r from-orange-500 to-red-400 text-transparent bg-clip-text text-sm md:text-xl ml-2 block sm:inline">
+                                    <motion.span
+                                        className="bg-gradient-to-r from-orange-500 to-red-400 text-transparent bg-clip-text text-sm md:text-xl ml-2 block sm:inline"
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{
+                                            delay: 0.5 + index * 0.1,
+                                            duration: 0.4,
+                                        }}
+                                    >
                                         (Most Popular)
-                                    </span>
+                                    </motion.span>
                                 )}
-                            </p>
+                            </motion.p>
 
-                            <p
-                                className={`text-4xl md:text-5xl font-bold mb-4 transition-all duration-300 relative z-10
-                                ${
+                            <motion.p
+                                className="text-4xl md:text-5xl font-bold mb-4 transition-all duration-300 relative z-10"
+                                variants={priceVariants}
+                                animate={
                                     activeCard === index
-                                        ? "bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text scale-105"
-                                        : "text-white"
+                                        ? ["visible", "active"]
+                                        : "visible"
                                 }
-                            `}
+                                style={{
+                                    backgroundClip:
+                                        activeCard === index ? "text" : "none",
+                                    WebkitBackgroundClip:
+                                        activeCard === index ? "text" : "none",
+                                    backgroundImage:
+                                        activeCard === index
+                                            ? "linear-gradient(to right, #f97316, #991b1b)"
+                                            : "none",
+                                    color:
+                                        activeCard === index
+                                            ? "transparent"
+                                            : "white",
+                                }}
                             >
                                 {isIndianUser
                                     ? option.priceInr
                                     : option.priceEur}
-                            </p>
+                            </motion.p>
 
-                            <p className="text-neutral-400 mb-6 relative z-10 text-sm md:text-base">
+                            <motion.p
+                                className="text-neutral-400 mb-6 relative z-10 text-sm md:text-base"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{
+                                    delay: 0.4 + index * 0.1,
+                                    duration: 0.4,
+                                }}
+                            >
                                 {option.description}
-                            </p>
+                            </motion.p>
 
                             <ul className="text-left mx-auto w-fit relative z-10">
                                 {option.features.map((feature, idx) => (
-                                    <li
+                                    <motion.li
                                         key={idx}
-                                        className={`mt-3 md:mt-4 flex items-start transition-transform duration-300 text-sm md:text-base
-                                            ${
-                                                activeCard === index &&
-                                                idx % 2 === 0
-                                                    ? "transform translate-x-1"
-                                                    : ""
-                                            }
-                                            ${
-                                                activeCard === index &&
-                                                idx % 2 === 1
-                                                    ? "transform -translate-x-1"
-                                                    : ""
-                                            }
-                                        `}
+                                        className="mt-3 md:mt-4 flex items-start text-sm md:text-base"
+                                        custom={idx}
+                                        variants={featureItemVariants}
+                                        whileHover={{
+                                            x: activeCard === index ? 5 : 0,
+                                            transition: { duration: 0.2 },
+                                        }}
                                     >
-                                        <CheckCircle2
-                                            className={`mr-2 flex-shrink-0 transition-colors duration-300
-                                                ${
-                                                    activeCard === index
-                                                        ? "text-orange-500"
-                                                        : "text-green-400"
-                                                }
-                                            `}
-                                            size={18}
-                                        />
+                                        <motion.div
+                                            animate={
+                                                activeCard === index
+                                                    ? {
+                                                          color: "rgb(249, 115, 22)", // text-orange-500
+                                                          transition: {
+                                                              duration: 0.3,
+                                                          },
+                                                      }
+                                                    : {
+                                                          color: "rgb(74, 222, 128)", // text-green-400
+                                                          transition: {
+                                                              duration: 0.3,
+                                                          },
+                                                      }
+                                            }
+                                            whileHover={{ scale: 1.2 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <CheckCircle2
+                                                className="mr-2 flex-shrink-0"
+                                                size={18}
+                                            />
+                                        </motion.div>
                                         <span className="text-neutral-300">
                                             {feature}
                                         </span>
-                                    </li>
+                                    </motion.li>
                                 ))}
                             </ul>
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
                 ))}
             </div>
 
             {/* Single CTA button */}
             <div className="flex justify-center mt-12 mb-8">
-                <button
+                <motion.button
                     onClick={() =>
                         document
                             .getElementById("bookingform")
                             .scrollIntoView({ behavior: "smooth" })
                     }
-                    className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
+                    className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 group overflow-hidden"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
                 >
-                    <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
-                    <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
-                    <span className="relative z-10">
+                    <motion.span
+                        className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0"
+                        initial={{ opacity: 1 }}
+                        whileHover={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    />
+                    <motion.span
+                        className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg"
+                        initial={{ borderColor: "transparent" }}
+                        whileHover={{ borderColor: "rgb(249, 115, 22)" }}
+                        transition={{ duration: 0.3 }}
+                    />
+                    <motion.span
+                        className="relative z-10"
+                        initial={{ scale: 1 }}
+                        whileHover={{ scale: 1.03 }}
+                        transition={{ duration: 0.2 }}
+                    >
                         Book a Free Call for Your Course
-                    </span>
-                </button>
+                    </motion.span>
+                </motion.button>
             </div>
-        </div>
+        </motion.div>
     );
 };
+
 export default Pricing;

@@ -144,9 +144,7 @@ const HeroSection = () => {
                             variants={itemVariants}
                         >
                             <motion.button
-                                onClick={() =>
-                                    document.getElementById("bookingform")
-                                }
+                                onClick={() => scrollToSection("bookingform")}
                                 className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
                             >
                                 <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
