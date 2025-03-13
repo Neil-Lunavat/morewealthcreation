@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { services } from "../constants";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 const Services = () => {
     const [activeCard, setActiveCard] = useState(null);
