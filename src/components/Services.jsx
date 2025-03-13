@@ -1,22 +1,16 @@
-import { services } from "../constants";
-import { MoveDown, ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import { services } from "../constants";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const Services = () => {
+    const [activeCard, setActiveCard] = useState(null);
     const [expandedServices, setExpandedServices] = useState({});
-    const [screenSize, setScreenSize] = useState("desktop");
+    const [isMobile, setIsMobile] = useState(false);
 
     // Check screen size for responsive behavior
     useEffect(() => {
         const checkScreenSize = () => {
-            const width = window.innerWidth;
-            if (width < 640) {
-                setScreenSize("mobile");
-            } else if (width >= 640 && width < 1024) {
-                setScreenSize("tablet");
-            } else {
-                setScreenSize("desktop");
-            }
+            setIsMobile(window.innerWidth < 768);
         };
 
         // Run once on component mount
@@ -29,106 +23,134 @@ const Services = () => {
         return () => window.removeEventListener("resize", checkScreenSize);
     }, []);
 
-    const isMobile = screenSize === "mobile";
-    const isTablet = screenSize === "tablet";
-
     const toggleService = (index) => {
-        if (screenSize === "desktop") return; // Only toggle on mobile and tablet
-
-        setExpandedServices((prev) => ({
-            ...prev,
-            [index]: !prev[index],
-        }));
+        if (isMobile) {
+            setExpandedServices((prev) => ({
+                ...prev,
+                [index]: !prev[index],
+            }));
+        }
     };
 
     return (
         <div
             id="services"
-            className="relative mt-20 border-b border-neutral-800 min-h-[800px] px-4 sm:px-6 lg:px-10"
+            className="mt-20 tracking-wide relative overflow-hidden py-8"
         >
-            <div className="text-center">
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl mt-10 lg:mt-20 tracking-wide">
-                    <span className="bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">
-                        Services
-                    </span>{" "}
-                    we provide
-                </h2>
-            </div>
+            {/* Background decorations */}
+            <div className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-br from-orange-500/10 to-red-800/10 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-gradient-to-tr from-orange-500/10 to-red-800/10 rounded-full blur-3xl"></div>
 
-            <div className="container mx-auto max-w-7xl">
-                <div
-                    className={`
-                    mt-10 lg:mt-20
-                    ${
-                        isMobile
-                            ? "grid grid-cols-1 gap-4"
-                            : isTablet
-                            ? "grid grid-cols-2 gap-6"
-                            : "grid grid-cols-3 gap-8"
-                    }
-                `}
-                >
-                    {services.map((services, index) => (
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center my-10 lg:my-16 font-semibold">
+                <span className="bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">
+                    Services
+                </span>{" "}
+                we provide
+            </h2>
+
+            <div className="flex flex-wrap justify-center max-w-7xl mx-auto">
+                {services.map((service, index) => (
+                    <div
+                        key={index}
+                        className="w-full sm:w-1/2 lg:w-1/3 px-4 py-3 transition-transform duration-300 hover:-translate-y-1"
+                        style={{
+                            opacity: 0,
+                            animation: `fadeIn 0.5s ease-out ${
+                                index * 150
+                            }ms forwards`,
+                        }}
+                        onMouseEnter={() => setActiveCard(index)}
+                        onMouseLeave={() => setActiveCard(null)}
+                        onClick={() => toggleService(index)}
+                    >
                         <div
-                            key={index}
-                            className={`
-                                relative
-                                ${isMobile || isTablet ? "cursor-pointer" : ""}
-                                border border-neutral-800 rounded-lg 
-                                p-4 sm:p-5 lg:p-6
-                                transition-all duration-300 
-                                hover:bg-neutral-800/50
+                            className={`relative rounded-xl p-6 text-md h-full 
+                                transition-all duration-500 
                                 ${
-                                    expandedServices[index]
-                                        ? "shadow-lg shadow-orange-900/10"
-                                        : ""
+                                    activeCard === index
+                                        ? "bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 shadow-lg border border-orange-700/30"
+                                        : "bg-neutral-900 border border-neutral-800"
                                 }
+                                ${isMobile ? "cursor-pointer" : ""}
                             `}
-                            onClick={() => toggleService(index)}
                         >
-                            <div className="flex items-start">
-                                <div className="flex-shrink-0 h-10 w-10 p-2 bg-neutral-900 text-orange-700 flex justify-center items-center rounded-full mr-4">
-                                    {services.icon}
+                            {/* Subtle gradient overlay that appears on hover */}
+                            <div
+                                className={`absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl transition-opacity duration-300 ${
+                                    activeCard === index
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                }`}
+                            ></div>
+
+                            <div className="flex items-start mb-3">
+                                <div
+                                    className={`flex-shrink-0 h-12 w-12 rounded-full 
+                                    flex justify-center items-center mr-4 
+                                    bg-gradient-to-br from-orange-500/10 to-red-800/10
+                                    text-orange-500 transition-all duration-300
+                                    ${
+                                        activeCard === index
+                                            ? "from-orange-500/20 to-red-800/20 scale-110"
+                                            : ""
+                                    }
+                                    `}
+                                >
+                                    <div className="relative z-10">
+                                        {service.icon}
+                                    </div>
                                 </div>
+
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
-                                        <h5 className="text-lg sm:text-xl font-medium mb-2 sm:mb-3">
-                                            {services.text}
+                                        <h5 className="text-lg font-medium text-white">
+                                            {service.text}
                                         </h5>
-                                        {(isMobile || isTablet) && (
-                                            <div className="text-orange-500 ml-2">
+                                        {isMobile && (
+                                            <span className="text-orange-500 ml-2">
                                                 {expandedServices[index] ? (
                                                     <ChevronUp size={20} />
                                                 ) : (
                                                     <ChevronDown size={20} />
                                                 )}
-                                            </div>
+                                            </span>
                                         )}
-                                    </div>
-
-                                    <div
-                                        className={`
-                                        text-neutral-400 text-sm sm:text-base
-                                        transition-all duration-300 ease-in-out
-                                        ${
-                                            (isMobile || isTablet) &&
-                                            !expandedServices[index]
-                                                ? "max-h-0 opacity-0 overflow-hidden"
-                                                : (isMobile || isTablet) &&
-                                                  expandedServices[index]
-                                                ? "max-h-96 opacity-100 pt-2"
-                                                : "pt-2"
-                                        }
-                                    `}
-                                    >
-                                        {services.description}
                                     </div>
                                 </div>
                             </div>
+
+                            <div
+                                className={`relative z-10 text-neutral-400 pl-16 transition-all duration-300
+                                    ${
+                                        isMobile && !expandedServices[index]
+                                            ? "max-h-0 opacity-0 overflow-hidden"
+                                            : isMobile &&
+                                              expandedServices[index]
+                                            ? "max-h-96 opacity-100 pt-2"
+                                            : "opacity-100"
+                                    }
+                                `}
+                            >
+                                {service.description}
+                            </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
+
+            {/* Animation keyframes */}
+            <style>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `}</style>
         </div>
     );
 };
