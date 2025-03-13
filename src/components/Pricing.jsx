@@ -1,6 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 import { pricingOptions } from "../constants";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
@@ -21,8 +21,9 @@ const Pricing = () => {
                     userTimeZone.includes("Calcutta")
             );
         } catch (error) {
-            // Default to rupees if detection fails
-            setIsIndianUser(true);
+            // Default to euros if detection fails
+            console.log("Yes");
+            setIsIndianUser(false);
         }
     }, []);
 
@@ -315,38 +316,14 @@ const Pricing = () => {
             </div>
 
             {/* Single CTA button */}
-            <div className="flex justify-center mt-12 mb-8">
+            <div className="flex justify-center mt-12 mb-8 hover:scale-105 transition-all duration-300">
                 <motion.button
-                    onClick={() =>
-                        document
-                            .getElementById("bookingform")
-                            .scrollIntoView({ behavior: "smooth" })
-                    }
-                    className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 group overflow-hidden"
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
+                    onClick={() => scrollToSection("bookingform")}
+                    className="relative px-16 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
                 >
-                    <motion.span
-                        className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0"
-                        initial={{ opacity: 1 }}
-                        whileHover={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                    />
-                    <motion.span
-                        className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg"
-                        initial={{ borderColor: "transparent" }}
-                        whileHover={{ borderColor: "rgb(249, 115, 22)" }}
-                        transition={{ duration: 0.3 }}
-                    />
-                    <motion.span
-                        className="relative z-10"
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.03 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        Book a Free Call for Your Course
-                    </motion.span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
+                    <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
+                    <span className="relative z-10">Book a Free Call</span>
                 </motion.button>
             </div>
         </motion.div>
