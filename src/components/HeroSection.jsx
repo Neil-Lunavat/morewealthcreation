@@ -145,12 +145,19 @@ const HeroSection = () => {
                         >
                             <motion.button
                                 onClick={() => scrollToSection("bookingform")}
-                                className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
+                                className="relative group px-8 py-4 rounded-lg text-white font-medium text-lg overflow-hidden"
+                                variants={buttonVariants}
+                                whileHover="hover"
+                                whileTap="tap"
                             >
-                                <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
-                                <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
+                                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-orange-500 to-red-800 transition-all duration-300 group-hover:opacity-90"></span>
+                                <span
+                                    className="absolute inset-0 w-full h-full bg-gradient-to-r from-orange-500 to-red-800 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                                    style={{ filter: "brightness(1.1)" }}
+                                ></span>
+                                <span className="absolute -inset-x-2 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:translate-y-1"></span>
                                 <span className="relative z-10">
-                                    Book a Free Call
+                                    Book a free call
                                 </span>
                             </motion.button>
 
@@ -173,25 +180,7 @@ const HeroSection = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8, duration: 0.5 }}
-                        >
-                            <div className="flex -space-x-2">
-                                {[1, 2, 3].map((i) => (
-                                    <div
-                                        key={i}
-                                        className="w-8 h-8 rounded-full bg-neutral-700 border-2 border-neutral-900 flex items-center justify-center text-xs font-medium"
-                                    >
-                                        {i}
-                                    </div>
-                                ))}
-                            </div>
-                            <span className="text-sm text-neutral-400">
-                                Join{" "}
-                                <span className="text-orange-500 font-medium">
-                                    500+
-                                </span>{" "}
-                                students already mastering their finances
-                            </span>
-                        </motion.div>
+                        ></motion.div>
                     </motion.div>
 
                     {/* Right decorative element */}
@@ -213,67 +202,126 @@ const HeroSection = () => {
                             <div className="w-full h-full rounded-2xl bg-gradient-to-br from-neutral-800 to-neutral-900 p-1">
                                 <div className="w-full h-full rounded-xl bg-neutral-900 p-6 flex flex-col">
                                     <div className="flex justify-between items-center mb-4">
-                                        <div className="flex space-x-1">
-                                            {[1, 2, 3].map((i) => (
-                                                <div
-                                                    key={i}
-                                                    className="w-3 h-3 rounded-full bg-neutral-700"
-                                                />
-                                            ))}
+                                        <div className="text-sm font-medium text-white">
+                                            Investment Growth
                                         </div>
-                                        <div className="text-xs text-neutral-500">
-                                            Financial Growth
+                                        <div className="text-xs text-orange-500 bg-orange-500/10 px-2 py-1 rounded-full">
+                                            +28.5%
                                         </div>
                                     </div>
 
                                     <div className="flex-1 flex items-center justify-center">
-                                        <div className="space-y-6 w-full">
-                                            <motion.div
-                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
-                                                initial={{ width: "0%" }}
-                                                animate={{ width: "85%" }}
-                                                transition={{
-                                                    delay: 0.8,
-                                                    duration: 1,
-                                                    ease: "easeOut",
-                                                }}
-                                            />
-                                            <motion.div
-                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
-                                                initial={{ width: "0%" }}
-                                                animate={{ width: "65%" }}
-                                                transition={{
-                                                    delay: 1.0,
-                                                    duration: 0.8,
-                                                    ease: "easeOut",
-                                                }}
-                                            />
-                                            <motion.div
-                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
-                                                initial={{ width: "0%" }}
-                                                animate={{ width: "95%" }}
-                                                transition={{
-                                                    delay: 1.2,
-                                                    duration: 1.2,
-                                                    ease: "easeOut",
-                                                }}
-                                            />
-                                            <motion.div
-                                                className="h-2 bg-gradient-to-r from-orange-500 to-red-800 rounded-full"
-                                                initial={{ width: "0%" }}
-                                                animate={{ width: "72%" }}
-                                                transition={{
-                                                    delay: 1.4,
-                                                    duration: 1,
-                                                    ease: "easeOut",
-                                                }}
-                                            />
+                                        <div className="relative w-full h-full pt-4">
+                                            {/* Grid lines */}
+                                            <div className="absolute inset-x-0 h-full flex flex-col justify-between">
+                                                {[0, 1, 2, 3, 4].map((i) => (
+                                                    <div
+                                                        key={i}
+                                                        className="w-full h-px bg-neutral-800"
+                                                    />
+                                                ))}
+                                            </div>
+
+                                            {/* Y-axis labels */}
+                                            <div className="absolute left-0 h-full flex flex-col justify-between text-xs text-neutral-500">
+                                                {[
+                                                    "100k",
+                                                    "75k",
+                                                    "50k",
+                                                    "25k",
+                                                    "0",
+                                                ].map((label, i) => (
+                                                    <div
+                                                        key={i}
+                                                        className="transform -translate-y-2"
+                                                    >
+                                                        {label}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Animated Line Graph */}
+                                            <svg
+                                                className="absolute inset-0 w-full h-full overflow-visible"
+                                                preserveAspectRatio="none"
+                                            >
+                                                <motion.path
+                                                    d="M 0 120 C 40 100, 80 110, 120 90 C 160 70, 200 80, 240 50 C 280 30, 320 40, 360 10"
+                                                    fill="none"
+                                                    stroke="url(#lineGradient)"
+                                                    strokeWidth="3"
+                                                    strokeLinecap="round"
+                                                    initial={{
+                                                        pathLength: 0,
+                                                        opacity: 0,
+                                                    }}
+                                                    animate={{
+                                                        pathLength: 1,
+                                                        opacity: 1,
+                                                    }}
+                                                    transition={{
+                                                        duration: 2,
+                                                        ease: "easeInOut",
+                                                        delay: 0.5,
+                                                    }}
+                                                />
+                                                <defs>
+                                                    <linearGradient
+                                                        id="lineGradient"
+                                                        x1="0%"
+                                                        y1="0%"
+                                                        x2="100%"
+                                                        y2="0%"
+                                                    >
+                                                        <stop
+                                                            offset="0%"
+                                                            stopColor="#f97316"
+                                                        />
+                                                        <stop
+                                                            offset="100%"
+                                                            stopColor="#991b1b"
+                                                        />
+                                                    </linearGradient>
+                                                </defs>
+                                            </svg>
+
+                                            {/* Data points */}
+                                            {[
+                                                { x: 0, y: 120 },
+                                                { x: 60, y: 100 },
+                                                { x: 120, y: 90 },
+                                                { x: 180, y: 70 },
+                                                { x: 240, y: 50 },
+                                                { x: 300, y: 40 },
+                                                { x: 360, y: 10 },
+                                            ].map((point, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    className="absolute w-3 h-3 bg-orange-500 rounded-full shadow-lg shadow-orange-500/20"
+                                                    style={{
+                                                        left: point.x,
+                                                        top: point.y,
+                                                    }}
+                                                    initial={{
+                                                        scale: 0,
+                                                        opacity: 0,
+                                                    }}
+                                                    animate={{
+                                                        scale: 1,
+                                                        opacity: 1,
+                                                    }}
+                                                    transition={{
+                                                        delay: 0.8 + i * 0.2,
+                                                        duration: 0.5,
+                                                    }}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
 
                                     <div className="mt-4 text-center">
                                         <div className="text-sm text-neutral-400">
-                                            Your financial future
+                                            Your financial growth potential
                                         </div>
                                         <motion.div
                                             className="font-medium text-orange-500"
@@ -284,7 +332,7 @@ const HeroSection = () => {
                                                 duration: 0.5,
                                             }}
                                         >
-                                            Potential growth →
+                                            Start investing today →
                                         </motion.div>
                                     </div>
                                 </div>
