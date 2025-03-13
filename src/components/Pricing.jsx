@@ -9,6 +9,26 @@ const Pricing = () => {
     const [isIndianUser, setIsIndianUser] = useState(true);
     const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
 
+    const scrollToSection = (sectionId) => {
+        const element = document.getElementById(sectionId);
+
+        if (element) {
+            const navbarHeight = document.querySelector("nav").offsetHeight;
+            const additionalOffset = 32; // Add extra padding from the navbar
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition =
+                elementPosition +
+                window.scrollY -
+                navbarHeight -
+                additionalOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth",
+            });
+        }
+    };
+
     // Detect user's country based on their locale
     useEffect(() => {
         try {
