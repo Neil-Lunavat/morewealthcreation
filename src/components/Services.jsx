@@ -1,9 +1,9 @@
-import { features } from "../constants";
+import { services } from "../constants";
 import { MoveDown, ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const Services = () => {
-    const [expandedFeatures, setExpandedFeatures] = useState({});
+    const [expandedServices, setExpandedServices] = useState({});
     const [screenSize, setScreenSize] = useState("desktop");
 
     // Check screen size for responsive behavior
@@ -32,10 +32,10 @@ const Services = () => {
     const isMobile = screenSize === "mobile";
     const isTablet = screenSize === "tablet";
 
-    const toggleFeature = (index) => {
+    const toggleService = (index) => {
         if (screenSize === "desktop") return; // Only toggle on mobile and tablet
 
-        setExpandedFeatures((prev) => ({
+        setExpandedServices((prev) => ({
             ...prev,
             [index]: !prev[index],
         }));
@@ -43,7 +43,7 @@ const Services = () => {
 
     return (
         <div
-            id="features"
+            id="services"
             className="relative mt-20 border-b border-neutral-800 min-h-[800px] px-4 sm:px-6 lg:px-10"
         >
             <div className="text-center">
@@ -68,7 +68,7 @@ const Services = () => {
                     }
                 `}
                 >
-                    {features.map((feature, index) => (
+                    {services.map((services, index) => (
                         <div
                             key={index}
                             className={`
@@ -79,25 +79,25 @@ const Services = () => {
                                 transition-all duration-300 
                                 hover:bg-neutral-800/50
                                 ${
-                                    expandedFeatures[index]
+                                    expandedServices[index]
                                         ? "shadow-lg shadow-orange-900/10"
                                         : ""
                                 }
                             `}
-                            onClick={() => toggleFeature(index)}
+                            onClick={() => toggleService(index)}
                         >
                             <div className="flex items-start">
                                 <div className="flex-shrink-0 h-10 w-10 p-2 bg-neutral-900 text-orange-700 flex justify-center items-center rounded-full mr-4">
-                                    {feature.icon}
+                                    {services.icon}
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
                                         <h5 className="text-lg sm:text-xl font-medium mb-2 sm:mb-3">
-                                            {feature.text}
+                                            {services.text}
                                         </h5>
                                         {(isMobile || isTablet) && (
                                             <div className="text-orange-500 ml-2">
-                                                {expandedFeatures[index] ? (
+                                                {expandedServices[index] ? (
                                                     <ChevronUp size={20} />
                                                 ) : (
                                                     <ChevronDown size={20} />
@@ -112,16 +112,16 @@ const Services = () => {
                                         transition-all duration-300 ease-in-out
                                         ${
                                             (isMobile || isTablet) &&
-                                            !expandedFeatures[index]
+                                            !expandedServices[index]
                                                 ? "max-h-0 opacity-0 overflow-hidden"
                                                 : (isMobile || isTablet) &&
-                                                  expandedFeatures[index]
+                                                  expandedServices[index]
                                                 ? "max-h-96 opacity-100 pt-2"
                                                 : "pt-2"
                                         }
                                     `}
                                     >
-                                        {feature.description}
+                                        {service.description}
                                     </div>
                                 </div>
                             </div>

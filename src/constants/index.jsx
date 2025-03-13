@@ -14,7 +14,7 @@ import user5 from "../assets/profile-pictures/user5.jpg";
 import user6 from "../assets/profile-pictures/user6.jpg";
 
 export const navItems = [
-    { label: "Services", id: "features" },
+    { label: "Services", id: "services" },
     { label: "Benefits", id: "workflow" },
     { label: "Pricing", id: "pricing" },
     { label: "Testimonials", id: "testimonials" },
@@ -162,7 +162,7 @@ export const resourcesLinks = [
 ];
 
 export const platformLinks = [
-    { href: "#", text: "Features" },
+    { href: "#", text: "Services" },
     { href: "#", text: "Supported Devices" },
     { href: "#", text: "System Requirements" },
     { href: "#", text: "Downloads" },
