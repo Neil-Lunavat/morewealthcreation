@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { services } from "../constants";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 import { ChevronUp, ChevronDown } from "lucide-react";
@@ -8,6 +8,8 @@ const Services = () => {
     const [activeCard, setActiveCard] = useState(null);
     const [expandedServices, setExpandedServices] = useState({});
     const [isMobile, setIsMobile] = useState(false);
+    const [contentHeights, setContentHeights] = useState({});
+    const contentRefs = useRef([]);
     const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
 
     // Check screen size for responsive behavior
@@ -27,6 +29,19 @@ const Services = () => {
             window.removeEventListener("resize", checkScreenSize);
         };
     }, []);
+
+    // Measure content heights
+    useEffect(() => {
+        if (isMobile && contentRefs.current.length > 0) {
+            const heights = {};
+            contentRefs.current.forEach((ref, index) => {
+                if (ref) {
+                    heights[index] = ref.scrollHeight;
+                }
+            });
+            setContentHeights(heights);
+        }
+    }, [isMobile, services]);
 
     const toggleService = (index) => {
         if (isMobile) {
@@ -246,28 +261,58 @@ const Services = () => {
                                 </div>
                             </div>
 
-                            <motion.div
-                                className="relative z-10 text-neutral-400 pl-16"
-                                initial={{
-                                    height: isMobile ? 0 : "auto",
-                                    opacity: isMobile ? 0 : 1,
-                                }}
-                                animate={{
-                                    height: isMobile
-                                        ? expandedServices[index]
-                                            ? "auto"
-                                            : 0
-                                        : "auto",
-                                    opacity: isMobile
-                                        ? expandedServices[index]
-                                            ? 1
-                                            : 0
-                                        : 1,
-                                }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                {service.description}
-                            </motion.div>
+                            {/* Description content with improved height animation */}
+                            <div className="relative z-10 pl-16 overflow-hidden">
+                                {/* Hidden div to measure content height */}
+                                <div
+                                    ref={(el) =>
+                                        (contentRefs.current[index] = el)
+                                    }
+                                    className="absolute invisible"
+                                    style={{
+                                        position: "absolute",
+                                        visibility: "hidden",
+                                        zIndex: -1,
+                                    }}
+                                >
+                                    {service.description}
+                                </div>
+
+                                <motion.div
+                                    className="text-neutral-400"
+                                    initial={{
+                                        height: isMobile ? 0 : "auto",
+                                        opacity: isMobile ? 0 : 1,
+                                    }}
+                                    animate={{
+                                        height: isMobile
+                                            ? expandedServices[index]
+                                                ? contentHeights[index] ||
+                                                  "auto"
+                                                : 0
+                                            : "auto",
+                                        opacity: isMobile
+                                            ? expandedServices[index]
+                                                ? 1
+                                                : 0
+                                            : 1,
+                                    }}
+                                    transition={{
+                                        height: {
+                                            duration: 0.3,
+                                            ease: "easeInOut",
+                                        },
+                                        opacity: {
+                                            duration: 0.2,
+                                            delay: expandedServices[index]
+                                                ? 0.1
+                                                : 0,
+                                        },
+                                    }}
+                                >
+                                    {service.description}
+                                </motion.div>
+                            </div>
                         </motion.div>
                     </motion.div>
                 ))}
