@@ -27,36 +27,42 @@ export const testimonials = [
         company: "WealthFront Advisors",
         image: user1,
         text: "The financial guidance I received was top-notch. The team helped me build a diversified investment portfolio, and now I feel more confident about my future.",
+        stars: 4.5,
     },
     {
         user: "Jane Smith",
         company: "Blue Horizon Capital",
         image: user2,
         text: "I couldn't be happier with the financial planning services. The team's insights and strategic advice have significantly improved my savings and investments.",
+        stars: 4,
     },
     {
         user: "David Johnson",
         company: "Quantum Wealth Management",
         image: user3,
         text: "Working with this firm was a game-changer for my financial goals. Their tailored investment strategies helped me maximize returns while minimizing risks.",
+        stars: 5,
     },
     {
         user: "Ronee Brown",
         company: "Fusion Finance Solutions",
         image: user4,
         text: "The financial planning service was outstanding! They provided me with a clear roadmap for wealth accumulation and retirement planning.",
+        stars: 3,
     },
     {
         user: "Michael Wilson",
         company: "Visionary Asset Management",
         image: user5,
         text: "Their financial expertise helped me navigate complex investment options with ease. I’ve seen a significant increase in my portfolio’s performance.",
+        stars: 4.5,
     },
     {
         user: "Emily Davis",
         company: "Synergy Financial Group",
         image: user6,
         text: "Thanks to their financial coaching, I finally have a solid budget and investment plan. I’m now on track to achieving my long-term wealth goals!",
+        stars: 4,
     },
 ];
 
