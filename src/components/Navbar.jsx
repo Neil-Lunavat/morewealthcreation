@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
 import { ArrowUp, Menu, X } from "lucide-react";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.webp";
 import { navItems } from "../constants";
 
 // Custom hook for scroll behavior with debouncing
