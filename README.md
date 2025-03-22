@@ -8,7 +8,7 @@ A modern, animated, and responsive landing page built for a finance tutor freela
 
 </div>
 
-![Website Preview](./Website.png)
+![Website Preview](./website.gif)
 
 ## 🚀 Project Overview
 
