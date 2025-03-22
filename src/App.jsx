@@ -21,7 +21,7 @@ const App = () => {
                 <Workflow />
                 <Pricing />
                 <Testimonials />
-                <BookingForm />
+                {/* <BookingForm /> */}
                 <Footer />
             </div>
         </>

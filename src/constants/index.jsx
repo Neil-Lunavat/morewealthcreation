@@ -6,12 +6,8 @@ import {
     TrendingUp,
     Users,
 } from "lucide-react";
-import user1 from "../assets/profile-pictures/user1.webp";
-import user2 from "../assets/profile-pictures/user2.webp";
-import user3 from "../assets/profile-pictures/user3.webp";
-import user4 from "../assets/profile-pictures/user4.webp";
-import user5 from "../assets/profile-pictures/user5.webp";
-import user6 from "../assets/profile-pictures/user6.webp";
+
+import user1 from "../assets/placeholder.jpg";
 
 export const navItems = [
     { label: "Services", id: "services" },
@@ -32,35 +28,35 @@ export const testimonials = [
     {
         user: "Jane Smith",
         company: "Blue Horizon Capital",
-        image: user2,
+        image: user1,
         text: "I couldn't be happier with the financial planning services. The team's insights and strategic advice have significantly improved my savings and investments.",
         stars: 4,
     },
     {
         user: "David Johnson",
         company: "Quantum Wealth Management",
-        image: user3,
+        image: user1,
         text: "Working with this firm was a game-changer for my financial goals. Their tailored investment strategies helped me maximize returns while minimizing risks.",
         stars: 5,
     },
     {
         user: "Ronee Brown",
         company: "Fusion Finance Solutions",
-        image: user4,
+        image: user1,
         text: "The financial planning service was outstanding! They provided me with a clear roadmap for wealth accumulation and retirement planning.",
         stars: 3,
     },
     {
         user: "Michael Wilson",
         company: "Visionary Asset Management",
-        image: user5,
+        image: user1,
         text: "Their financial expertise helped me navigate complex investment options with ease. I’ve seen a significant increase in my portfolio’s performance.",
         stars: 4.5,
     },
     {
         user: "Emily Davis",
         company: "Synergy Financial Group",
-        image: user6,
+        image: user1,
         text: "Thanks to their financial coaching, I finally have a solid budget and investment plan. I’m now on track to achieving my long-term wealth goals!",
         stars: 4,
     },

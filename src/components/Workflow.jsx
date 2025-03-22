@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import codeImg from "../assets/code.avif";
+import codeImg from "../assets/code.webp";
 import { checklistItems } from "../constants";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";

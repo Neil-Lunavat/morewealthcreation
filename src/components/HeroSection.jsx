@@ -144,13 +144,13 @@ const HeroSection = () => {
                             variants={itemVariants}
                         >
                             <motion.button
-                                onClick={() => scrollToSection("bookingform")}
+                                onClick={() => scrollToSection("pricing")}
                                 className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
                             >
                                 <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
                                 <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
                                 <span className="relative z-10">
-                                    Book a Free Call
+                                    Check Pricing
                                 </span>
                             </motion.button>
 
