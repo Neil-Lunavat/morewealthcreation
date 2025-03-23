@@ -6,6 +6,8 @@ import Footer from "./components/Footer";
 import Pricing from "./components/Pricing";
 import Testimonials from "./components/Testimonials";
 import BookingForm from "./components/BookingForm";
+import { Analytics } from "@vercel/analytics/react";
+
 // At the top of your file
 // This will hide all console warnings
 console.warn = () => {};
@@ -24,6 +26,7 @@ const App = () => {
                 {/* <BookingForm /> */}
                 <Footer />
             </div>
+            <Analytics />
         </>
     );
 };

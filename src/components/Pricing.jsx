@@ -229,17 +229,6 @@ const Pricing = () => {
                     },
                 },
             },
-            title: {
-                hidden: { opacity: 0, x: -10 },
-                visible: {
-                    opacity: 1,
-                    x: 0,
-                    transition: {
-                        duration: 0.3,
-                        ease: "easeOut",
-                    },
-                },
-            },
             tier: {
                 hidden: { opacity: 0, x: -10 },
                 visible: {
