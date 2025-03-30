@@ -101,7 +101,7 @@ const HeroSection = () => {
                             className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight"
                             variants={itemVariants}
                         >
-                            Hi, I'm Aayush More.
+                            {`Hi, I'm Aayush More.`}
                             <br />
                             Your personal
                             <motion.span

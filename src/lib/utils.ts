@@ -49,6 +49,7 @@ export function detectIndianUser(): boolean {
             userTimeZone.includes("Asia") || userTimeZone.includes("Calcutta")
         );
     } catch (error) {
+        console.log(error);
         return false;
     }
 }

@@ -122,9 +122,8 @@ export interface AnimationVariants {
     visible: object | ((i: number) => object);
     hover?: object;
     tap?: object;
-    [key: string]: any;
+    [key: string]: object | ((i: number) => object) | undefined;
 }
-
 /**
  * Scroll animation options interface
  */

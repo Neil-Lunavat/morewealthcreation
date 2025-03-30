@@ -7,7 +7,6 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { scrollToSection, detectIndianUser } from "@/lib/utils";
 
 const Pricing = () => {
-    const [activeCard, setActiveCard] = useState<number | null>(null);
     const [isIndianUser, setIsIndianUser] = useState(true);
     const [selectedSection, setSelectedSection] = useState<
         "teaching" | "consulting"
@@ -274,7 +273,7 @@ const Pricing = () => {
             },
             featureItem: {
                 hidden: { opacity: 0, x: -10 },
-                visible: (i: number) => ({
+                visible: () => ({
                     opacity: 1,
                     x: 0,
                     transition: {
@@ -419,8 +418,6 @@ const Pricing = () => {
                                 hover:bg-gradient-to-br hover:from-neutral-900 hover:via-neutral-800 hover:to-neutral-900
                                 transition-all duration-300 ease-out
                             `}
-                            onMouseEnter={() => setActiveCard(index)}
-                            onMouseLeave={() => setActiveCard(null)}
                         >
                             {/* Tier-specific accent background for the card - always visible */}
                             {selectedSection === "teaching" && index === 1 && (

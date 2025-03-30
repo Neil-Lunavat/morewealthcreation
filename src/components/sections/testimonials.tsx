@@ -213,7 +213,7 @@ const Testimonials = () => {
                                     activeCard === index ? "hover" : "visible"
                                 }
                             >
-                                "
+                                &ldquo;
                             </motion.div>
 
                             <motion.p
@@ -236,7 +236,7 @@ const Testimonials = () => {
                                 }
                                 style={{ transformOrigin: "right bottom" }}
                             >
-                                "
+                                &rdquo;
                             </motion.div>
 
                             <motion.div
