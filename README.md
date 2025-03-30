@@ -8,7 +8,7 @@ A modern, animated, and responsive landing page built for a finance tutor freela
 
 </div>
 
-![Website Preview](./website.gif)
+![Website Preview](./public/website.gif)
 
 ## 🚀 Project Overview
 
@@ -16,7 +16,7 @@ This is a freelance project I developed for a financial advisory professional. T
 
 ### Site Structure
 
-![Website Architecture](./website_overview.svg)
+![Website Architecture](./public/website_overview.svg)
 
 ## ✨ Technical Highlights
 
