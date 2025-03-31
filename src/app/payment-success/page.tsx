@@ -1,12 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export default function PaymentSuccessPage() {
+// Loading fallback component
+function PaymentSuccessLoading() {
+    return (
+        <div className="min-h-screen bg-neutral-900 flex flex-col items-center justify-center px-4 py-12">
+            <div className="w-full max-w-md bg-neutral-800 rounded-xl border border-neutral-700 p-8 text-center">
+                <div className="animate-pulse flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-green-500/30"></div>
+                    <div className="h-8 w-3/4 bg-neutral-700 rounded"></div>
+                    <div className="h-4 w-1/2 bg-neutral-700 rounded"></div>
+                    <div className="mt-6 space-y-3">
+                        <div className="h-32 w-full bg-neutral-700 rounded"></div>
+                        <div className="h-40 w-full bg-neutral-700 rounded"></div>
+                    </div>
+                    <div className="h-10 w-full bg-orange-500/30 rounded-lg mt-4"></div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Main component that uses search params
+function PaymentSuccessContent() {
     const searchParams = useSearchParams();
     const [sessionType, setSessionType] = useState<string>("session");
 
@@ -165,5 +186,14 @@ export default function PaymentSuccessPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Main exported component with Suspense boundary
+export default function PaymentSuccessPage() {
+    return (
+        <Suspense fallback={<PaymentSuccessLoading />}>
+            <PaymentSuccessContent />
+        </Suspense>
     );
 }
