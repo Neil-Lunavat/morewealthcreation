@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 export const metadata: Metadata = {
     title: "More Wealth Creation | Personal Finance Tutor",
@@ -38,7 +39,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html lang="en" className="dark">
             <head>
                 <script
                     type="application/ld+json"
@@ -82,7 +83,12 @@ export default function RootLayout({
                     }}
                 />
             </head>
-            <body suppressHydrationWarning={true}>{children}</body>
+            <body
+                suppressHydrationWarning={true}
+                className="bg-neutral-900 text-white"
+            >
+                <ErrorBoundary>{children}</ErrorBoundary>
+            </body>
         </html>
     );
 }

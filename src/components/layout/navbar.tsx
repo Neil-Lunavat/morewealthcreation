@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo, useCallback } from "react";
 import { ArrowUp, Menu, X } from "lucide-react";
 import Image from "next/image";
 import { navItems } from "@/constants";
 import { scrollToSection, scrollToTop } from "@/lib/utils";
+import { SectionErrorBoundary } from "@/components/ui/error-boundary";
 
 // Memoized desktop navigation item component
 const NavItem = memo(
@@ -36,6 +37,7 @@ const NavItem = memo(
                             ? "w-full left-0"
                             : "w-0 group-hover:w-full group-hover:left-0"
                     }`}
+                    aria-hidden="true"
                 />
             </li>
         );
@@ -82,7 +84,7 @@ const ScrollToTopButton = memo(
                 className={`z-40 fixed bottom-8 right-8 p-4 rounded-full shadow-xl transition-all duration-300 backdrop-blur-md bg-white/20 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 ${
                     visible
                         ? "translate-y-0 opacity-100"
-                        : "translate-y-20 opacity-0"
+                        : "translate-y-20 opacity-0 pointer-events-none"
                 } before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-gradient-to-br before:from-orange-400 before:to-red-700 before:blur-sm`}
                 aria-label="Scroll to top"
             >
@@ -99,23 +101,26 @@ const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeLink, setActiveLink] = useState("#home");
 
-    // Handle scroll effect
+    // Optimized scroll handler
     useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
+        // Combine the event handlers to reduce scroll event listeners
+        const handleScrollEffects = () => {
+            // Handle scroll state
+            const newIsScrolled = window.scrollY > 50;
+            if (isScrolled !== newIsScrolled) {
+                setIsScrolled(newIsScrolled);
             }
-        };
 
-        // Set active link based on scroll position
-        const handleActiveLink = () => {
+            // Handle active link
             const sections = document.querySelectorAll("section[id]");
             const scrollY = window.pageYOffset;
 
-            sections.forEach((section) => {
-                // Type assertion to HTMLElement which has offsetHeight and offsetTop properties
+            // More efficient section detection
+            let foundActive = false;
+
+            for (const section of sections) {
+                if (foundActive) break; // Skip once we've found an active section
+
                 const htmlSection = section as HTMLElement;
                 const sectionHeight = htmlSection.offsetHeight;
                 const sectionTop = htmlSection.offsetTop - 100;
@@ -123,20 +128,31 @@ const Navbar = () => {
 
                 if (
                     scrollY > sectionTop &&
-                    scrollY <= sectionTop + sectionHeight
+                    scrollY <= sectionTop + sectionHeight &&
+                    sectionId
                 ) {
-                    setActiveLink(`#${sectionId}`);
+                    const newActiveLink = `#${sectionId}`;
+                    if (activeLink !== newActiveLink) {
+                        setActiveLink(newActiveLink);
+                    }
+                    foundActive = true;
                 }
-            });
+            }
         };
 
-        window.addEventListener("scroll", handleScroll);
-        window.addEventListener("scroll", handleActiveLink);
+        // Initial call to set correct state on mount
+        handleScrollEffects();
+
+        // Use passive: true for better scroll performance
+        window.addEventListener("scroll", handleScrollEffects, {
+            passive: true,
+        });
+
+        // Cleanup function
         return () => {
-            window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("scroll", handleActiveLink);
+            window.removeEventListener("scroll", handleScrollEffects);
         };
-    }, []);
+    }, [isScrolled, activeLink]);
 
     // Disable body scroll when mobile menu is open
     useEffect(() => {
@@ -146,17 +162,22 @@ const Navbar = () => {
         };
     }, [isMobileMenuOpen]);
 
-    const handleNavClick = (sectionId: string) => {
+    // Memoize handlers to prevent unnecessary re-renders
+    const handleNavClick = useCallback((sectionId: string) => {
         scrollToSection(sectionId);
         setIsMobileMenuOpen(false);
-    };
+    }, []);
 
-    const handleScrollToTop = () => {
+    const handleScrollToTop = useCallback(() => {
         scrollToTop();
-    };
+    }, []);
+
+    const toggleMobileMenu = useCallback(() => {
+        setIsMobileMenuOpen((prev) => !prev);
+    }, []);
 
     return (
-        <>
+        <SectionErrorBoundary section="Navigation">
             {/* Floating Navbar with glassy effect */}
             <nav
                 className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 py-3 px-4 w-11/12 max-w-7xl rounded-xl transition-all duration-300 ${
@@ -203,9 +224,7 @@ const Navbar = () => {
                         {/* Hamburger Menu for Mobile */}
                         <button
                             className="lg:hidden flex items-center justify-center w-10 h-10 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition-colors hover:bg-neutral-800"
-                            onClick={() =>
-                                setIsMobileMenuOpen(!isMobileMenuOpen)
-                            }
+                            onClick={toggleMobileMenu}
                             aria-expanded={isMobileMenuOpen}
                             aria-controls="mobile-menu"
                             aria-label={
@@ -260,7 +279,7 @@ const Navbar = () => {
                 visible={isScrolled}
                 onClick={handleScrollToTop}
             />
-        </>
+        </SectionErrorBoundary>
     );
 };
 
