@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { scrollToSection, detectIndianUser } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const Pricing = () => {
     const [isIndianUser, setIsIndianUser] = useState(true);
@@ -14,11 +15,25 @@ const Pricing = () => {
     const [selectedTier, setSelectedTier] = useState<
         "bronze" | "silver" | "gold"
     >("bronze");
+    const [loading, setLoading] = useState(false);
     const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
+    const router = useRouter();
 
     // Detect user's country based on their locale
     useEffect(() => {
         setIsIndianUser(detectIndianUser());
+    }, []);
+
+    // Initialize Razorpay script
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
     }, []);
 
     // Tier accent colors
@@ -34,6 +49,97 @@ const Pricing = () => {
     // Handle tier change
     const handleTierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedTier(e.target.value as "bronze" | "silver" | "gold");
+    };
+
+    // Handle payment process
+    const handlePayment = async (amount: number, description: string) => {
+        setLoading(true);
+        try {
+            // 1. Create a Razorpay order
+            const response = await fetch("/api/create-razorpay-order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    amount: 100, // 1 rupee in paise for testing
+                    // amount: amount * 100, // Production amount in paise
+                    currency: "INR",
+                    receipt: `mwc_${Date.now()}`,
+                    notes: {
+                        description: description,
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to create order");
+            }
+
+            const { order } = await response.json();
+
+            // 2. Open Razorpay payment window
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                amount: order.amount,
+                currency: order.currency,
+                name: "More Wealth Creation",
+                description: description,
+                order_id: order.id,
+                handler: async function (response: any) {
+                    // 3. Verify payment was successful
+                    const verifyResponse = await fetch(
+                        "/api/verify-razorpay-payment",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id:
+                                    response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                            }),
+                        }
+                    );
+
+                    if (verifyResponse.ok) {
+                        // 4. Redirect to success page
+                        router.push(
+                            `/payment-success?type=${encodeURIComponent(
+                                description
+                            )}`
+                        );
+                    } else {
+                        alert(
+                            "Payment verification failed. Please contact support."
+                        );
+                    }
+                },
+                prefill: {
+                    name: "",
+                    email: "",
+                    contact: "",
+                },
+                theme: {
+                    color: "#F97316", // Orange brand color
+                },
+                modal: {
+                    ondismiss: function () {
+                        setLoading(false);
+                    },
+                },
+            };
+
+            // Open Razorpay payment window
+            const paymentObject = new (window as any).Razorpay(options);
+            paymentObject.open();
+        } catch (error) {
+            console.error("Payment error:", error);
+            alert("Payment initialization failed. Please try again.");
+            setLoading(false);
+        }
     };
 
     // Teaching options - memoized to prevent unnecessary recalculations
@@ -52,7 +158,9 @@ const Pricing = () => {
                     "Session recording",
                 ],
                 buttonText: "Book a Session",
-                buttonAction: () => {}, // Do nothing for now
+                buttonAction: () =>
+                    handlePayment(2000, "One-on-One Teaching Session"),
+                amount: 2000,
             },
             {
                 title:
@@ -101,18 +209,30 @@ const Pricing = () => {
                           ],
                 buttonText: "Enroll Now",
                 buttonAction: () => {
-                    // Redirect to different URLs based on tier
-                    if (selectedTier === "bronze") {
-                        window.location.href = "#bronze-tier";
-                    } else if (selectedTier === "silver") {
-                        window.location.href = "#silver-tier";
-                    } else {
-                        window.location.href = "#gold-tier";
-                    }
+                    // Handle tier enrollment with appropriate amount
+                    const amount =
+                        selectedTier === "bronze"
+                            ? 3000
+                            : selectedTier === "silver"
+                            ? 5000
+                            : 8000;
+                    handlePayment(
+                        amount,
+                        `${
+                            selectedTier.charAt(0).toUpperCase() +
+                            selectedTier.slice(1)
+                        } Tier Enrollment`
+                    );
                 },
+                amount:
+                    selectedTier === "bronze"
+                        ? 3000
+                        : selectedTier === "silver"
+                        ? 5000
+                        : 8000,
             },
         ],
-        [selectedTier, tierColors]
+        [selectedTier, tierColors, handlePayment]
     );
 
     // Consulting options - memoized
@@ -130,9 +250,9 @@ const Pricing = () => {
                     "Financial goal setting",
                     "Progress tracking",
                 ],
-                buttonText: "Book Monthly", // Add this
-                buttonAction: () => scrollToSection("bookingform"), // Add this
-                // Add tierGradient if needed, even if empty
+                buttonText: "Book Monthly",
+                buttonAction: () => handlePayment(5000, "Monthly Consulting"),
+                amount: 5000,
                 tierGradient: "",
             },
             {
@@ -147,13 +267,13 @@ const Pricing = () => {
                     "Email follow-up",
                     "Flexible scheduling",
                 ],
-                buttonText: "Book Session", // Add this
-                buttonAction: () => scrollToSection("bookingform"), // Add this
-                // Add tierGradient if needed, even if empty
+                buttonText: "Book Session",
+                buttonAction: () => handlePayment(2000, "Hourly Consultation"),
+                amount: 2000,
                 tierGradient: "",
             },
         ],
-        []
+        [handlePayment]
     );
 
     // Animation variants - using memoization to avoid recreating on every render
@@ -362,7 +482,7 @@ const Pricing = () => {
             variants={animationVariants.container}
         >
             <motion.h2
-                className="text-3xl sm:text-3xl lg:text-4xl text-center mb-8 tracking-wide"
+                className="text-3xl sm:text-5xl lg:text-6xl text-center mb-8 tracking-wide"
                 variants={animationVariants.title}
             >
                 Pricing
@@ -412,7 +532,7 @@ const Pricing = () => {
                         whileHover="hover"
                     >
                         <div
-                            className={`p-5 border rounded-lg text-center h-full relative overflow-hidden group
+                            className={`p-5 border rounded-xl text-center h-full relative overflow-hidden group
                                 border-neutral-700 bg-neutral-900
                                 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10
                                 hover:bg-gradient-to-br hover:from-neutral-900 hover:via-neutral-800 hover:to-neutral-900
@@ -553,26 +673,23 @@ const Pricing = () => {
                                     ))}
                                 </motion.ul>
 
-                                {/* Card-specific buttons for teaching section */}
-                                {/* Only render buttons for teaching section */}
-                                {selectedSection === "teaching" && (
-                                    <motion.button
-                                        onClick={() =>
-                                            option.buttonAction &&
-                                            option.buttonAction()
-                                        }
-                                        className="mt-5 relative w-full overflow-hidden rounded-lg py-2.5 text-white font-medium text-sm group"
-                                        variants={animationVariants.button}
-                                        whileHover="hover"
-                                        whileTap="tap"
-                                    >
-                                        <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
-                                        <span className="absolute inset-0 border border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
-                                        <span className="relative z-10">
-                                            {option.buttonText}
-                                        </span>
-                                    </motion.button>
-                                )}
+                                {/* Card-specific buttons */}
+                                <motion.button
+                                    onClick={option.buttonAction}
+                                    disabled={loading}
+                                    className="mt-5 relative w-full overflow-hidden rounded-lg py-2.5 text-white font-medium text-sm group disabled:opacity-50 disabled:cursor-not-allowed"
+                                    variants={animationVariants.button}
+                                    whileHover="hover"
+                                    whileTap="tap"
+                                >
+                                    <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
+                                    <span className="absolute inset-0 border border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
+                                    <span className="relative z-10">
+                                        {loading
+                                            ? "Processing..."
+                                            : option.buttonText}
+                                    </span>
+                                </motion.button>
                             </motion.div>
                         </div>
                     </motion.div>
