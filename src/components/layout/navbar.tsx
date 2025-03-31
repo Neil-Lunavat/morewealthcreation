@@ -180,7 +180,7 @@ const Navbar = () => {
         <SectionErrorBoundary section="Navigation">
             {/* Floating Navbar with glassy effect */}
             <nav
-                className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 py-3 px-4 w-11/12 max-w-7xl rounded-xl transition-all duration-300 ${
+                className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-50 py-2 px-3 w-11/12 max-w-7xl rounded-lg transition-all duration-300 ${
                     isScrolled
                         ? "backdrop-blur-lg bg-neutral-900/80 shadow-lg border border-neutral-700/80"
                         : "backdrop-blur-md bg-neutral-900/50 border border-neutral-700/50"
@@ -244,7 +244,7 @@ const Navbar = () => {
             {/* Mobile Menu Dropdown */}
             <div
                 id="mobile-menu"
-                className={`lg:hidden fixed top-[calc(4rem+1.5rem)] left-1/2 transform -translate-x-1/2 w-11/12 z-40 bg-neutral-900/95 backdrop-blur-lg border border-neutral-700/80 rounded-xl shadow-xl transition-all duration-300 overflow-hidden ${
+                className={`lg:hidden fixed top-[calc(4rem+1.5rem)] left-1/2 transform -translate-x-1/2 w-11/12 z-40 bg-neutral-900/95 backdrop-blur-lg border border-neutral-700/80 rounded-lg shadow-xl transition-all duration-300 overflow-hidden ${
                     isMobileMenuOpen
                         ? "max-h-[400px] opacity-100"
                         : "max-h-0 opacity-0 pointer-events-none"

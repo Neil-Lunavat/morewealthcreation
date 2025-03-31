@@ -103,7 +103,7 @@ const Workflow = () => {
             variants={containerVariants}
         >
             <motion.h2
-                className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-center mb-8 tracking-wide text-white"
+                className="text-3xl sm:text-4xl lg:text-3xl font-semibold text-center mb-8 tracking-wide text-white"
                 variants={titleVariants}
             >
                 Accelerate your{" "}

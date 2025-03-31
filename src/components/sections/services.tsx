@@ -119,7 +119,7 @@ const Services = () => {
     return (
         <motion.div
             id="services"
-            className="mt-20 tracking-wide relative overflow-hidden py-8"
+            className="mt-10 tracking-wide relative overflow-hidden py-8"
             ref={ref}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
@@ -140,7 +140,7 @@ const Services = () => {
             />
 
             <motion.h2
-                className="text-3xl sm:text-5xl lg:text-6xl text-center my-10 lg:my-16 font-semibold"
+                className="text-3xl sm:text-3xl lg:text-4xl text-center my-10 lg:my-8 font-semibold"
                 variants={titleVariants}
             >
                 <motion.span
@@ -173,7 +173,7 @@ const Services = () => {
                         whileHover={{ y: -5 }}
                     >
                         <motion.div
-                            className={`relative rounded-xl p-6 text-md h-full 
+                            className={`relative rounded-lg p-4 text-md h-full 
                                 transition-all duration-500 
                                 ${
                                     activeCard === index
@@ -191,7 +191,7 @@ const Services = () => {
                         >
                             {/* Subtle gradient overlay that appears on hover */}
                             <motion.div
-                                className="absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl"
+                                className="absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-lg"
                                 initial={{ opacity: 0 }}
                                 animate={{
                                     opacity: activeCard === index ? 1 : 0,
@@ -201,7 +201,7 @@ const Services = () => {
 
                             <div className="flex items-start mb-3">
                                 <motion.div
-                                    className="flex-shrink-0 h-12 w-12 rounded-full 
+                                    className="flex-shrink-0 h-9 w-9 rounded-full 
                                     flex justify-center items-center mr-4 
                                     bg-gradient-to-br from-orange-500/10 to-red-800/10
                                     text-orange-500"

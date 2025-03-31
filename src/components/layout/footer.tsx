@@ -11,7 +11,7 @@ const Footer = () => {
     const closeDisclaimer = () => setDisclaimerOpen(false);
 
     return (
-        <footer className="bg-neutral-900 text-white py-6 mt-10 border-t border-neutral-800">
+        <footer className="bg-neutral-900 text-white py-3 mt-10 border-t border-neutral-800">
             <div className="container mx-auto flex flex-col items-center px-6">
                 <div className="w-full flex flex-col md:flex-row justify-between items-center mb-3">
                     <p className="text-sm text-neutral-500 mb-3 md:mb-0">

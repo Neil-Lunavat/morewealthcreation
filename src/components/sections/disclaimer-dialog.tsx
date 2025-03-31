@@ -17,7 +17,7 @@ interface DisclaimerDialogProps {
 const DisclaimerDialog = ({ isOpen, onClose }: DisclaimerDialogProps) => {
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-auto bg-neutral-900 border border-neutral-800 p-6">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-auto bg-neutral-900 border border-neutral-800 p-4">
                 <DialogHeader className="flex items-center justify-between">
                     <DialogTitle className="text-xl font-semibold text-white">
                         Financial Disclaimer

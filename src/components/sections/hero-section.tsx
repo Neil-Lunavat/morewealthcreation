@@ -94,16 +94,16 @@ const HeroSection = () => {
                 <div className="flex flex-col lg:flex-row items-center justify-between">
                     {/* Left content column */}
                     <motion.div
-                        className="w-full lg:w-7/12 lg:pr-12 mb-12 lg:mb-0"
+                        className="w-full lg:w-7/12 lg:pr-12 mb-6 lg:mb-0"
                         variants={itemVariants}
                     >
                         <motion.h1
-                            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight"
+                            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight"
                             variants={itemVariants}
                         >
                             {`Hi, I'm Aayush More.`}
                             <br />
-                            Your personal
+                            Your personal{" "}
                             <motion.span
                                 className="bg-gradient-to-r from-orange-500 via-orange-600 to-red-800 bg-clip-text text-transparent inline-block"
                                 initial="initial"
@@ -113,7 +113,7 @@ const HeroSection = () => {
                                     backgroundSize: "200% 100%",
                                 }}
                             >
-                                {" Finance Tutor"}
+                                Finance Tutor
                             </motion.span>
                         </motion.h1>
 
@@ -132,7 +132,7 @@ const HeroSection = () => {
                         >
                             <motion.button
                                 onClick={() => scrollToSection("pricing")}
-                                className="relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
+                                className="relative px-4 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 hover:scale-105 group overflow-hidden"
                             >
                                 <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
                                 <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
@@ -143,7 +143,7 @@ const HeroSection = () => {
 
                             <motion.button
                                 onClick={() => scrollToSection("services")}
-                                className="relative group px-8 py-4 rounded-lg text-white font-medium text-lg overflow-hidden bg-transparent border border-neutral-700 hover:border-orange-500 transition-colors duration-300"
+                                className="relative group px-4 py-4 rounded-lg text-white font-medium text-lg overflow-hidden bg-transparent border border-neutral-700 hover:border-orange-500 transition-colors duration-300"
                                 variants={buttonVariants}
                                 whileHover="hover"
                                 whileTap="tap"
@@ -169,7 +169,7 @@ const HeroSection = () => {
                         variants={itemVariants}
                     >
                         <motion.div
-                            className="relative z-10 w-full aspect-square max-w-md mx-auto"
+                            className="relative z-10 w-full aspect-square max-w-sm mx-auto"
                             initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                             animate={{ opacity: 1, scale: 1, rotate: 0 }}
                             transition={{
@@ -180,7 +180,7 @@ const HeroSection = () => {
                             }}
                         >
                             <div className="w-full h-full rounded-2xl bg-gradient-to-br from-neutral-800 to-neutral-900 p-1">
-                                <div className="w-full h-full rounded-xl bg-neutral-900 p-6 flex flex-col">
+                                <div className="w-full h-full rounded-lg bg-neutral-900 p-4 flex flex-col">
                                     <div className="flex justify-between items-center mb-4">
                                         <div className="text-sm font-medium text-white">
                                             Investment Growth

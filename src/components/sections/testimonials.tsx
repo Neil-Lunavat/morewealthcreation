@@ -120,7 +120,7 @@ const Testimonials = () => {
     return (
         <motion.div
             id="testimonials"
-            className="mt-20 tracking-wide relative overflow-hidden py-8"
+            className="mt-10 tracking-wide relative overflow-hidden py-8"
             ref={ref}
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
@@ -139,7 +139,7 @@ const Testimonials = () => {
             />
 
             <motion.h2
-                className="text-3xl sm:text-5xl lg:text-6xl text-center my-10 lg:my-16 font-semibold"
+                className="text-3xl sm:text-3xl lg:text-4xl text-center my-10 lg:my-8 font-semibold"
                 variants={titleVariants}
             >
                 What People are{" "}
@@ -171,7 +171,8 @@ const Testimonials = () => {
                         onMouseLeave={() => setActiveCard(null)}
                     >
                         <motion.div
-                            className={`relative rounded-xl p-6 text-md h-full 
+                            className={`relative rounded-lg p-4 text-md h-full 
+                                flex flex-col justify-between
                                 transition-all duration-500 
                                 ${
                                     activeCard === index
@@ -197,7 +198,7 @@ const Testimonials = () => {
                         >
                             {/* Subtle gradient overlay that appears on hover */}
                             <motion.div
-                                className="absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-xl"
+                                className="absolute inset-0 bg-gradient-to-tr from-orange-600/5 to-red-800/5 rounded-lg"
                                 initial={{ opacity: 0 }}
                                 animate={{
                                     opacity: activeCard === index ? 1 : 0,
@@ -205,40 +206,48 @@ const Testimonials = () => {
                                 transition={{ duration: 0.3 }}
                             />
 
-                            {/* Animated decorative quotes */}
-                            <motion.div
-                                className="text-orange-500 text-3xl mb-2"
-                                variants={quoteVariants}
-                                animate={
-                                    activeCard === index ? "hover" : "visible"
-                                }
-                            >
-                                &ldquo;
-                            </motion.div>
+                            {/* Testimonial content - top section */}
+                            <div className="flex flex-col flex-grow">
+                                {/* Animated decorative quotes */}
+                                <motion.div
+                                    className="text-orange-500 text-3xl mb-2"
+                                    variants={quoteVariants}
+                                    animate={
+                                        activeCard === index
+                                            ? "hover"
+                                            : "visible"
+                                    }
+                                >
+                                    &ldquo;
+                                </motion.div>
 
-                            <motion.p
-                                className="text-gray-200 relative z-10"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{
-                                    delay: 0.3 + index * 0.05,
-                                    duration: 0.4,
-                                }}
-                            >
-                                {testimonial.text}
-                            </motion.p>
+                                <motion.p
+                                    className="text-gray-200 relative z-10"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{
+                                        delay: 0.3 + index * 0.05,
+                                        duration: 0.4,
+                                    }}
+                                >
+                                    {testimonial.text}
+                                </motion.p>
 
-                            <motion.div
-                                className="text-orange-500 text-3xl text-right"
-                                variants={quoteVariants}
-                                animate={
-                                    activeCard === index ? "hover" : "visible"
-                                }
-                                style={{ transformOrigin: "right bottom" }}
-                            >
-                                &rdquo;
-                            </motion.div>
+                                <motion.div
+                                    className="text-orange-500 text-3xl text-right mt-2"
+                                    variants={quoteVariants}
+                                    animate={
+                                        activeCard === index
+                                            ? "hover"
+                                            : "visible"
+                                    }
+                                    style={{ transformOrigin: "right bottom" }}
+                                >
+                                    &rdquo;
+                                </motion.div>
+                            </div>
 
+                            {/* User info - bottom section */}
                             <motion.div
                                 className="relative z-10 mt-6 pt-4 border-t border-neutral-800 flex items-start"
                                 initial={{ opacity: 0, y: 10 }}
@@ -248,9 +257,9 @@ const Testimonials = () => {
                                     duration: 0.4,
                                 }}
                             >
-                                <motion.div className="relative w-12 h-12 mr-4">
+                                <motion.div className="relative w-8 h-8 mr-4">
                                     <motion.div
-                                        className={`w-12 h-12 relative overflow-hidden rounded-full ${
+                                        className={`w-8 h-8 relative overflow-hidden rounded-full ${
                                             activeCard === index
                                                 ? "border-2 border-orange-500"
                                                 : "border border-neutral-700"

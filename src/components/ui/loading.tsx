@@ -75,7 +75,7 @@ export const LoadingButton = ({
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
         <button
-            className={`relative px-8 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 ${
+            className={`relative px-4 py-4 rounded-lg text-white text-lg font-medium transition-all duration-300 ${
                 isLoading ? "cursor-not-allowed" : "hover:scale-105"
             } ${className}`}
             disabled={isLoading}

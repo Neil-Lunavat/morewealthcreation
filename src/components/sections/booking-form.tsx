@@ -245,14 +245,14 @@ const BookingForm = () => {
         <SectionErrorBoundary section="Booking Form">
             <motion.div
                 id="bookingform"
-                className="flex flex-col items-center mt-6 lg:mt-20 px-4"
+                className="flex flex-col items-center mt-6 lg:mt-10 px-4"
                 ref={ref}
                 initial="hidden"
                 animate={isVisible ? "visible" : "hidden"}
                 variants={containerVariants}
             >
                 <motion.h2
-                    className="text-4xl sm:text-6xl lg:text-7xl text-center tracking-wide"
+                    className="text-4xl sm:text-4xl lg:text-5xl text-center tracking-wide"
                     variants={titleVariants}
                 >
                     Book a
@@ -327,7 +327,7 @@ const BookingForm = () => {
                                     errors.name
                                         ? "border-red-500"
                                         : "border-neutral-700 focus:border-orange-500"
-                                } rounded-lg px-4 py-3 text-white 
+                                } rounded-lg px-3 py-2 text-white 
                                 focus:outline-none transition-colors duration-300
                                 group-hover:border-orange-600`}
                                 placeholder=" "
@@ -393,7 +393,7 @@ const BookingForm = () => {
 
                         {/* Date and Time Selection */}
                         <motion.div
-                            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                            className="grid grid-cols-1 md:grid-cols-3 gap-4"
                             custom={2}
                             variants={formItemVariants}
                         >

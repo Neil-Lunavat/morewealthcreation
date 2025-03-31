@@ -362,7 +362,7 @@ const Pricing = () => {
             variants={animationVariants.container}
         >
             <motion.h2
-                className="text-3xl sm:text-5xl lg:text-6xl text-center mb-8 tracking-wide"
+                className="text-3xl sm:text-3xl lg:text-4xl text-center mb-8 tracking-wide"
                 variants={animationVariants.title}
             >
                 Pricing
@@ -412,7 +412,7 @@ const Pricing = () => {
                         whileHover="hover"
                     >
                         <div
-                            className={`p-5 border rounded-xl text-center h-full relative overflow-hidden group
+                            className={`p-5 border rounded-lg text-center h-full relative overflow-hidden group
                                 border-neutral-700 bg-neutral-900
                                 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10
                                 hover:bg-gradient-to-br hover:from-neutral-900 hover:via-neutral-800 hover:to-neutral-900

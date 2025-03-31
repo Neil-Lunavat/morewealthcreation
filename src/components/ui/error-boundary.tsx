@@ -36,7 +36,7 @@ export class ErrorBoundary extends Component<
             // You can render any custom fallback UI
             return (
                 this.props.fallback || (
-                    <div className="p-6 my-8 bg-red-900/20 border border-red-700 rounded-lg text-white max-w-2xl mx-auto">
+                    <div className="p-4 my-8 bg-red-900/20 border border-red-700 rounded-lg text-white max-w-2xl mx-auto">
                         <div className="flex items-center mb-4">
                             <AlertTriangle className="w-6 h-6 text-red-400 mr-2" />
                             <h2 className="text-xl font-bold">
