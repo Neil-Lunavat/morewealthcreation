@@ -73,9 +73,8 @@ export default function RootLayout({
                                 closes: "18:00",
                             },
                             sameAs: [
-                                "https://www.facebook.com/morewealthcreation",
-                                "https://twitter.com/morewealthcreation",
-                                "https://www.linkedin.com/in/morewealthcreation",
+                                "https://x.com/moreofaayu",
+                                "https://www.linkedin.com/in/aayush-more-",
                                 "https://www.instagram.com/morewealthcreation",
                             ],
                             priceRange: "₹₹",

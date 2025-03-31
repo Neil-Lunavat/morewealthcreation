@@ -11,7 +11,7 @@ import {
 // Types
 export interface NavItem {
     label: string;
-    id: string;
+    href: string;
 }
 
 export interface Testimonial {
@@ -48,11 +48,11 @@ export interface FooterLink {
 
 // Navigation items
 export const navItems: NavItem[] = [
-    { label: "Services", id: "services" },
-    { label: "Benefits", id: "workflow" },
-    { label: "Pricing", id: "pricing" },
-    { label: "Testimonials", id: "testimonials" },
-    { label: "Contact Us", id: "bookingform" },
+    { label: "About", href: "/about-us" },
+    { label: "Benefits", href: "#workflow" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "Testimonials", href: "#testimonials" },
+    { label: "Contact Us", href: "#bookingform" },
 ];
 
 // Testimonials

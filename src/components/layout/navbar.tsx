@@ -3,9 +3,25 @@
 import React, { useState, useEffect, memo, useCallback } from "react";
 import { ArrowUp, Menu, X } from "lucide-react";
 import Image from "next/image";
-import { navItems } from "@/constants";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { scrollToSection, scrollToTop } from "@/lib/utils";
 import { SectionErrorBoundary } from "@/components/ui/error-boundary";
+
+// Updated NavItem interface to support both regular links and scroll links
+export interface NavItem {
+    label: string;
+    href: string; // Can be "/path" or "#section-id"
+}
+
+// Navigation items with updated structure
+export const navItems: NavItem[] = [
+    { label: "About", href: "/about-us" },
+    { label: "Benefits", href: "#workflow" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "Testimonials", href: "#testimonials" },
+    { label: "Contact Us", href: "#bookingform" },
+];
 
 // Memoized desktop navigation item component
 const NavItem = memo(
@@ -14,33 +30,62 @@ const NavItem = memo(
         isActive,
         onClick,
     }: {
-        item: { id: string; label: string };
+        item: NavItem;
         isActive: boolean;
-        onClick: (id: string) => void;
+        onClick: (href: string) => void;
     }) => {
-        return (
-            <li className="relative group">
-                <button
-                    onClick={() => onClick(item.id)}
-                    className={`py-2 px-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 rounded transition-all duration-300 ${
-                        isActive
-                            ? "text-orange-500"
-                            : "text-white hover:text-orange-500"
-                    }`}
-                    aria-current={isActive ? "page" : undefined}
-                >
-                    {item.label}
-                </button>
-                <span
-                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-800 transition-all duration-300 ${
-                        isActive
-                            ? "w-full left-0"
-                            : "w-0 group-hover:w-full group-hover:left-0"
-                    }`}
-                    aria-hidden="true"
-                />
-            </li>
-        );
+        const isScrollLink = item.href.startsWith("#");
+
+        if (isScrollLink) {
+            return (
+                <li className="relative group">
+                    <button
+                        onClick={() => onClick(item.href)}
+                        className={`py-2 px-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 rounded transition-all duration-300 ${
+                            isActive
+                                ? "text-orange-500"
+                                : "text-white hover:text-orange-500"
+                        }`}
+                        aria-current={isActive ? "page" : undefined}
+                    >
+                        {item.label}
+                    </button>
+                    <span
+                        className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-800 transition-all duration-300 ${
+                            isActive
+                                ? "w-full left-0"
+                                : "w-0 group-hover:w-full group-hover:left-0"
+                        }`}
+                        aria-hidden="true"
+                    />
+                </li>
+            );
+        } else {
+            // For regular links like "/about-us"
+            return (
+                <li className="relative group">
+                    <Link
+                        href={item.href}
+                        className={`py-2 px-2 block focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 rounded transition-all duration-300 ${
+                            isActive
+                                ? "text-orange-500"
+                                : "text-white hover:text-orange-500"
+                        }`}
+                        aria-current={isActive ? "page" : undefined}
+                    >
+                        {item.label}
+                    </Link>
+                    <span
+                        className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-800 transition-all duration-300 ${
+                            isActive
+                                ? "w-full left-0"
+                                : "w-0 group-hover:w-full group-hover:left-0"
+                        }`}
+                        aria-hidden="true"
+                    />
+                </li>
+            );
+        }
     }
 );
 
@@ -53,23 +98,42 @@ const MobileNavItem = memo(
         isActive,
         onClick,
     }: {
-        item: { id: string; label: string };
+        item: NavItem;
         isActive: boolean;
-        onClick: (id: string) => void;
+        onClick: (href: string) => void;
     }) => {
-        return (
-            <button
-                onClick={() => onClick(item.id)}
-                className={`w-full text-left py-3 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 rounded-md transition-all duration-300 ${
-                    isActive
-                        ? "border-orange-500 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text border-2"
-                        : "text-white hover:border-orange-500 hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-800 hover:text-transparent hover:bg-clip-text border-2 border-transparent"
-                }`}
-                aria-current={isActive ? "page" : undefined}
-            >
-                {item.label}
-            </button>
-        );
+        const isScrollLink = item.href.startsWith("#");
+
+        if (isScrollLink) {
+            return (
+                <button
+                    onClick={() => onClick(item.href)}
+                    className={`w-full text-left py-3 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 rounded-md transition-all duration-300 ${
+                        isActive
+                            ? "border-orange-500 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text border-2"
+                            : "text-white hover:border-orange-500 hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-800 hover:text-transparent hover:bg-clip-text border-2 border-transparent"
+                    }`}
+                    aria-current={isActive ? "page" : undefined}
+                >
+                    {item.label}
+                </button>
+            );
+        } else {
+            // For regular links
+            return (
+                <Link
+                    href={item.href}
+                    className={`block w-full text-left py-3 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 rounded-md transition-all duration-300 ${
+                        isActive
+                            ? "border-orange-500 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text border-2"
+                            : "text-white hover:border-orange-500 hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-800 hover:text-transparent hover:bg-clip-text border-2 border-transparent"
+                    }`}
+                    aria-current={isActive ? "page" : undefined}
+                >
+                    {item.label}
+                </Link>
+            );
+        }
     }
 );
 
@@ -99,7 +163,8 @@ ScrollToTopButton.displayName = "ScrollToTopButton";
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [activeLink, setActiveLink] = useState("#home");
+    const [activeLink, setActiveLink] = useState("");
+    const pathname = usePathname();
 
     // Optimized scroll handler
     useEffect(() => {
@@ -111,31 +176,34 @@ const Navbar = () => {
                 setIsScrolled(newIsScrolled);
             }
 
-            // Handle active link
-            const sections = document.querySelectorAll("section[id]");
-            const scrollY = window.pageYOffset;
+            // Only check sections if we're on a page that has them
+            if (pathname === "/" || pathname === "") {
+                // Handle active link
+                const sections = document.querySelectorAll("section[id]");
+                const scrollY = window.pageYOffset;
 
-            // More efficient section detection
-            let foundActive = false;
+                // More efficient section detection
+                let foundActive = false;
 
-            for (const section of sections) {
-                if (foundActive) break; // Skip once we've found an active section
+                for (const section of sections) {
+                    if (foundActive) break; // Skip once we've found an active section
 
-                const htmlSection = section as HTMLElement;
-                const sectionHeight = htmlSection.offsetHeight;
-                const sectionTop = htmlSection.offsetTop - 100;
-                const sectionId = section.getAttribute("id");
+                    const htmlSection = section as HTMLElement;
+                    const sectionHeight = htmlSection.offsetHeight;
+                    const sectionTop = htmlSection.offsetTop - 100;
+                    const sectionId = section.getAttribute("id");
 
-                if (
-                    scrollY > sectionTop &&
-                    scrollY <= sectionTop + sectionHeight &&
-                    sectionId
-                ) {
-                    const newActiveLink = `#${sectionId}`;
-                    if (activeLink !== newActiveLink) {
-                        setActiveLink(newActiveLink);
+                    if (
+                        scrollY > sectionTop &&
+                        scrollY <= sectionTop + sectionHeight &&
+                        sectionId
+                    ) {
+                        const newActiveLink = `#${sectionId}`;
+                        if (activeLink !== newActiveLink) {
+                            setActiveLink(newActiveLink);
+                        }
+                        foundActive = true;
                     }
-                    foundActive = true;
                 }
             }
         };
@@ -152,7 +220,14 @@ const Navbar = () => {
         return () => {
             window.removeEventListener("scroll", handleScrollEffects);
         };
-    }, [isScrolled, activeLink]);
+    }, [isScrolled, activeLink, pathname]);
+
+    // Set active link based on pathname for non-hash links
+    useEffect(() => {
+        if (pathname && !pathname.startsWith("#")) {
+            setActiveLink(pathname);
+        }
+    }, [pathname]);
 
     // Disable body scroll when mobile menu is open
     useEffect(() => {
@@ -163,10 +238,43 @@ const Navbar = () => {
     }, [isMobileMenuOpen]);
 
     // Memoize handlers to prevent unnecessary re-renders
-    const handleNavClick = useCallback((sectionId: string) => {
-        scrollToSection(sectionId);
-        setIsMobileMenuOpen(false);
-    }, []);
+    const handleNavClick = useCallback(
+        (href: string) => {
+            // Always close mobile menu first
+            setIsMobileMenuOpen(false);
+
+            // Special case for Contact Us - always ensure we're on home page and scroll to booking form
+            if (href === "#bookingform") {
+                if (pathname !== "/") {
+                    // If not on home page, navigate to home first
+                    window.location.href = "/#bookingform";
+                    return;
+                } else {
+                    // If already on home page, just scroll
+                    scrollToSection("bookingform");
+                    return;
+                }
+            }
+
+            // For other section links
+            if (href.startsWith("#")) {
+                const sectionId = href.substring(1); // Remove the # character
+
+                // If we're on the about-us page, redirect to home page with the section hash
+                if (pathname === "/about-us") {
+                    window.location.href = `/#${sectionId}`;
+                    return;
+                }
+
+                // Otherwise just scroll to the section on current page
+                scrollToSection(sectionId);
+                return;
+            }
+
+            // For regular links, the Link component will handle navigation
+        },
+        [pathname]
+    );
 
     const handleScrollToTop = useCallback(() => {
         scrollToTop();
@@ -213,9 +321,9 @@ const Navbar = () => {
                         <ul className="hidden lg:flex ml-14 space-x-12">
                             {navItems.map((item) => (
                                 <NavItem
-                                    key={item.id}
+                                    key={item.href}
                                     item={item}
-                                    isActive={`#${item.id}` === activeLink}
+                                    isActive={activeLink === item.href}
                                     onClick={handleNavClick}
                                 />
                             ))}
@@ -254,9 +362,9 @@ const Navbar = () => {
                 <div className="flex flex-col p-4 space-y-2">
                     {navItems.map((item) => (
                         <MobileNavItem
-                            key={item.id}
+                            key={item.href}
                             item={item}
-                            isActive={`#${item.id}` === activeLink}
+                            isActive={activeLink === item.href}
                             onClick={handleNavClick}
                         />
                     ))}

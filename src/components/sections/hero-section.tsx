@@ -75,7 +75,7 @@ const HeroSection = () => {
 
     return (
         <motion.div
-            className="relative pt-10 pb-20 lg:pt-20 lg:pb-32 px-6 overflow-hidden"
+            className="relative pt-10 px-6 overflow-hidden"
             initial="hidden"
             animate={isLoaded ? "visible" : "hidden"}
             variants={containerVariants}
@@ -101,9 +101,8 @@ const HeroSection = () => {
                             className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight"
                             variants={itemVariants}
                         >
-                            {`Hi, I'm Aayush More.`}
                             <br />
-                            Your personal{" "}
+                            From Learning{" "}
                             <motion.span
                                 className="bg-gradient-to-r from-orange-500 via-orange-600 to-red-800 bg-clip-text text-transparent inline-block"
                                 initial="initial"
@@ -113,7 +112,7 @@ const HeroSection = () => {
                                     backgroundSize: "200% 100%",
                                 }}
                             >
-                                Finance Tutor
+                                to Leading:
                             </motion.span>
                         </motion.h1>
 
@@ -121,9 +120,8 @@ const HeroSection = () => {
                             className="mt-6 text-xl text-neutral-400 max-w-2xl"
                             variants={itemVariants}
                         >
-                            Personalized financial coaching and investment
-                            strategies crafted to help you take control of your
-                            financial future.
+                            Personalised Mentorship & Consulting: Guiding Your
+                            Unique Financial Journey.
                         </motion.p>
 
                         <motion.div
