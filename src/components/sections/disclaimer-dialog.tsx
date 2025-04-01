@@ -1,12 +1,10 @@
 "use client";
 
-import { X } from "lucide-react";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogClose,
 } from "@/components/ui/dialog";
 
 interface DisclaimerDialogProps {
@@ -22,12 +20,6 @@ const DisclaimerDialog = ({ isOpen, onClose }: DisclaimerDialogProps) => {
                     <DialogTitle className="text-xl font-semibold text-white">
                         Financial Disclaimer
                     </DialogTitle>
-                    <DialogClose
-                        className="text-neutral-400 hover:text-orange-500 transition-colors p-1 rounded-full hover:bg-neutral-800"
-                        aria-label="Close dialog"
-                    >
-                        <X size={20} />
-                    </DialogClose>
                 </DialogHeader>
 
                 <div className="space-y-4 text-neutral-300 text-sm">
