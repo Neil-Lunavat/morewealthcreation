@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
+import Script from "next/script";
 
 export const metadata: Metadata = {
     title: "More Wealth Creation | Personal Finance Tutor",
@@ -87,6 +88,20 @@ export default function RootLayout({
                 className="bg-neutral-900 text-white"
             >
                 <ErrorBoundary>{children}</ErrorBoundary>
+
+                {/* Google Analytics with Next.js Script component */}
+                <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=G-QZJJDRLV2S"
+                    strategy="afterInteractive"
+                />
+                <Script id="google-analytics" strategy="afterInteractive">
+                    {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-QZJJDRLV2S');
+                    `}
+                </Script>
             </body>
         </html>
     );

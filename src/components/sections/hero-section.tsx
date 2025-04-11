@@ -120,8 +120,8 @@ const HeroSection = () => {
                             className="mt-6 text-xl text-neutral-400 max-w-2xl"
                             variants={itemVariants}
                         >
-                            Personalised Mentorship & Consulting: Guiding Your
-                            Unique Financial Journey.
+                            Master Your Financial Future with Personalized
+                            Guidance — Without the High Advisor Fees
                         </motion.p>
 
                         <motion.div
@@ -135,7 +135,7 @@ const HeroSection = () => {
                                 <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-800 opacity-100 group-hover:opacity-0 transition-opacity duration-300"></span>
                                 <span className="absolute inset-0 border-2 border-transparent group-hover:border-orange-500 rounded-lg transition-all duration-300"></span>
                                 <span className="relative z-10">
-                                    Check Pricing
+                                    View Pricing Options
                                 </span>
                             </motion.button>
 
@@ -147,7 +147,7 @@ const HeroSection = () => {
                                 whileTap="tap"
                             >
                                 <span className="relative z-10">
-                                    Explore services
+                                    Book a Free Consultation
                                 </span>
                             </motion.button>
                         </motion.div>
@@ -224,7 +224,13 @@ const HeroSection = () => {
                                                 preserveAspectRatio="none"
                                             >
                                                 <motion.path
-                                                    d="M 0 120 C 40 100, 80 110, 120 90 C 160 70, 200 80, 240 50 C 280 30, 320 40, 360 10"
+                                                    d="M 40 120 
+       C 65 110, 65 110, 90 100 
+       C 115 95, 115 95, 140 90 
+       C 165 80, 165 80, 190 70 
+       C 215 60, 215 60, 240 50 
+       C 265 45, 265 45, 290 40 
+       C 315 25, 315 25, 320 10"
                                                     fill="none"
                                                     stroke="url(#lineGradient)"
                                                     strokeWidth="3"
@@ -265,13 +271,13 @@ const HeroSection = () => {
 
                                             {/* Data points */}
                                             {[
-                                                { x: 0, y: 120 },
-                                                { x: 60, y: 100 },
-                                                { x: 120, y: 90 },
-                                                { x: 180, y: 70 },
+                                                { x: 40, y: 120 },
+                                                { x: 90, y: 100 },
+                                                { x: 140, y: 90 },
+                                                { x: 190, y: 70 },
                                                 { x: 240, y: 50 },
-                                                { x: 300, y: 40 },
-                                                { x: 360, y: 10 },
+                                                { x: 290, y: 40 },
+                                                { x: 320, y: 10 },
                                             ].map((point, i) => (
                                                 <motion.div
                                                     key={i}

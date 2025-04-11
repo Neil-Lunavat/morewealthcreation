@@ -433,7 +433,7 @@ const StatsSection = () => {
         { icon: Calendar, value: "5+", label: "Years Experience" },
         { icon: Users, value: "300+", label: "Students Taught" },
         { icon: GraduationCap, value: "10+", label: "College Lectures" },
-        { icon: Target, value: "100%", label: "Satisfaction" },
+        { icon: Target, value: "94%", label: "Satisfaction" },
     ];
 
     const containerVariants = {

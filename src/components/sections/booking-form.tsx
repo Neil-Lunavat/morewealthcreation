@@ -14,6 +14,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@/components/ui/loading";
 import { SectionErrorBoundary } from "@/components/ui/error-boundary";
+import { useEffect } from "react";
+import { initEmailJS } from "@/lib/email";
 
 // Form validation schema
 const formSchema = z.object({
@@ -43,6 +45,11 @@ const BookingForm = () => {
         message: "",
     });
     const { ref, isVisible } = useScrollAnimation({ once: true, amount: 0.2 });
+
+    useEffect(() => {
+        // Initialize EmailJS
+        initEmailJS();
+    }, []);
 
     // React Hook Form setup
     const {

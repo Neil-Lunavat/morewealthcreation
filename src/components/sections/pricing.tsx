@@ -532,7 +532,7 @@ const Pricing = () => {
                         whileHover="hover"
                     >
                         <div
-                            className={`p-5 border rounded-xl text-center h-full relative overflow-hidden group
+                            className={`p-5 border rounded-xl text-center h-full relative overflow-hidden group flex flex-col
                                 border-neutral-700 bg-neutral-900
                                 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10
                                 hover:bg-gradient-to-br hover:from-neutral-900 hover:via-neutral-800 hover:to-neutral-900
@@ -566,112 +566,129 @@ const Pricing = () => {
                                 variants={animationVariants.cardContent}
                                 initial="hidden"
                                 animate="visible"
+                                className="flex-grow flex flex-col"
                             >
-                                <motion.p
-                                    className="text-2xl md:text-3xl mb-2 font-semibold relative z-10"
-                                    variants={animationVariants.cardTitle}
-                                >
-                                    {option.title}
-                                    {selectedSection === "teaching" &&
-                                        index === 1 &&
-                                        selectedTier === "gold" && (
-                                            <motion.span
-                                                className="bg-gradient-to-r from-orange-500 to-red-400 text-transparent bg-clip-text text-sm ml-2 block sm:inline"
-                                                initial={{ opacity: 0, x: -5 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{
-                                                    delay: 0.2,
-                                                    duration: 0.3,
-                                                }}
-                                            >
-                                                (Best Value)
-                                            </motion.span>
-                                        )}
-                                </motion.p>
-
-                                {/* Tier dropdown inside the second card for teaching section */}
-                                {selectedSection === "teaching" &&
-                                    index === 1 && (
-                                        <motion.div
-                                            className="mb-4 mt-1 relative z-10"
-                                            variants={animationVariants.tier}
-                                        >
-                                            <div className="bg-neutral-800/60 p-1.5 rounded-lg inline-flex items-center">
-                                                <span className="text-neutral-300 mr-2 text-sm">
-                                                    Select Tier:
-                                                </span>
-                                                <motion.select
-                                                    value={selectedTier}
-                                                    onChange={handleTierChange}
-                                                    className="bg-neutral-900 text-white border border-neutral-700 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                                                    whileHover={{ scale: 1.05 }}
-                                                    whileTap={{ scale: 0.98 }}
+                                <div className="flex-grow">
+                                    <motion.p
+                                        className="text-2xl md:text-3xl mb-2 font-semibold relative z-10"
+                                        variants={animationVariants.cardTitle}
+                                    >
+                                        {option.title}
+                                        {selectedSection === "teaching" &&
+                                            index === 1 &&
+                                            selectedTier === "gold" && (
+                                                <motion.span
+                                                    className="bg-gradient-to-r from-orange-500 to-red-400 text-transparent bg-clip-text text-sm ml-2 block sm:inline"
+                                                    initial={{
+                                                        opacity: 0,
+                                                        x: -5,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        x: 0,
+                                                    }}
                                                     transition={{
-                                                        duration: 0.2,
+                                                        delay: 0.2,
+                                                        duration: 0.3,
                                                     }}
                                                 >
-                                                    <option value="bronze">
-                                                        Bronze
-                                                    </option>
-                                                    <option value="silver">
-                                                        Silver
-                                                    </option>
-                                                    <option value="gold">
-                                                        Gold
-                                                    </option>
-                                                </motion.select>
-                                            </div>
-                                        </motion.div>
-                                    )}
+                                                    (Best Value)
+                                                </motion.span>
+                                            )}
+                                    </motion.p>
 
-                                <motion.p
-                                    className="text-3xl md:text-4xl font-bold mb-3 relative z-10 bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text"
-                                    variants={animationVariants.price}
-                                >
-                                    {isIndianUser
-                                        ? option.price
-                                        : option.priceEur}
-                                </motion.p>
-
-                                <motion.p
-                                    className="text-neutral-400 mb-4 relative z-10 text-sm"
-                                    variants={animationVariants.description}
-                                >
-                                    {option.description}
-                                </motion.p>
-
-                                <motion.ul
-                                    className="text-left mx-auto w-fit relative z-10 min-h-[160px]"
-                                    variants={animationVariants.featureList}
-                                >
-                                    {option.features.map((feature, idx) => (
-                                        <motion.li
-                                            key={idx}
-                                            className="mt-2 flex items-start text-sm group-hover:translate-x-1 transition-transform duration-200"
-                                            custom={idx}
-                                            variants={
-                                                animationVariants.featureItem
-                                            }
-                                        >
-                                            <motion.span
-                                                className="mr-2 flex-shrink-0 text-green-400 group-hover:text-orange-500 transition-colors duration-200"
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                transition={{
-                                                    delay: 0.3 + idx * 0.05,
-                                                    type: "spring",
-                                                    stiffness: 260,
-                                                    damping: 20,
-                                                }}
+                                    {/* Tier dropdown inside the second card for teaching section */}
+                                    {selectedSection === "teaching" &&
+                                        index === 1 && (
+                                            <motion.div
+                                                className="mb-4 mt-1 relative z-10"
+                                                variants={
+                                                    animationVariants.tier
+                                                }
                                             >
-                                                <CheckCircle2 size={16} />
-                                            </motion.span>
-                                            <span className="text-neutral-300">
-                                                {feature}
-                                            </span>
-                                        </motion.li>
-                                    ))}
-                                </motion.ul>
+                                                <div className="bg-neutral-800/60 p-1.5 rounded-lg inline-flex items-center">
+                                                    <span className="text-neutral-300 mr-2 text-sm">
+                                                        Select Tier:
+                                                    </span>
+                                                    <motion.select
+                                                        value={selectedTier}
+                                                        onChange={
+                                                            handleTierChange
+                                                        }
+                                                        className="bg-neutral-900 text-white border border-neutral-700 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                                                        whileHover={{
+                                                            scale: 1.05,
+                                                        }}
+                                                        whileTap={{
+                                                            scale: 0.98,
+                                                        }}
+                                                        transition={{
+                                                            duration: 0.2,
+                                                        }}
+                                                    >
+                                                        <option value="bronze">
+                                                            Bronze
+                                                        </option>
+                                                        <option value="silver">
+                                                            Silver
+                                                        </option>
+                                                        <option value="gold">
+                                                            Gold
+                                                        </option>
+                                                    </motion.select>
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                    <motion.p
+                                        className="text-3xl md:text-4xl font-bold mb-3 relative z-10 bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text"
+                                        variants={animationVariants.price}
+                                    >
+                                        {isIndianUser
+                                            ? option.price
+                                            : option.priceEur}
+                                    </motion.p>
+
+                                    <motion.p
+                                        className="text-neutral-400 mb-4 relative z-10 text-sm"
+                                        variants={animationVariants.description}
+                                    >
+                                        {option.description}
+                                    </motion.p>
+
+                                    <motion.ul
+                                        className="text-left mx-auto w-fit relative z-10 min-h-[160px]"
+                                        variants={animationVariants.featureList}
+                                    >
+                                        {option.features.map((feature, idx) => (
+                                            <motion.li
+                                                key={idx}
+                                                className="mt-2 flex items-start text-sm group-hover:translate-x-1 transition-transform duration-200"
+                                                custom={idx}
+                                                variants={
+                                                    animationVariants.featureItem
+                                                }
+                                            >
+                                                <motion.span
+                                                    className="mr-2 flex-shrink-0 text-green-400 group-hover:text-orange-500 transition-colors duration-200"
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: 1 }}
+                                                    transition={{
+                                                        delay: 0.3 + idx * 0.05,
+                                                        type: "spring",
+                                                        stiffness: 260,
+                                                        damping: 20,
+                                                    }}
+                                                >
+                                                    <CheckCircle2 size={16} />
+                                                </motion.span>
+                                                <span className="text-neutral-300">
+                                                    {feature}
+                                                </span>
+                                            </motion.li>
+                                        ))}
+                                    </motion.ul>
+                                </div>
 
                                 {/* Card-specific buttons */}
                                 <motion.button
